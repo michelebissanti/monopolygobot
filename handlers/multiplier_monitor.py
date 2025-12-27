@@ -63,6 +63,14 @@ class MultiplierMonitor:
         with shared_state.rolls_condition:
             shared_state.rolls_condition.wait()
             rolls = shared_state.rolls
+        
+        # Aspetta che rolls sia inizializzato
+        while rolls is None:
+            sleep(1)
+            with shared_state.rolls_condition:
+                shared_state.rolls_condition.wait()
+                rolls = shared_state.rolls
+        
         hr_image_path = os.path.join(
             shared_state.current_path, "images", "high-roller.png"
         )
@@ -79,6 +87,12 @@ class MultiplierMonitor:
                 with shared_state.multiplier_condition:
                     shared_state.multiplier_condition.wait()
                     multiplier = shared_state.multiplier
+                
+                # Aspetta che rolls e multiplier siano inizializzati
+                if rolls is None or multiplier is None:
+                    sleep(1)
+                    continue
+                
                 builder_running = shared_state.builder_running
                 hr_event = ocr_utils.find(hr_image)
                 if hr_event is not None:

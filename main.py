@@ -14,7 +14,7 @@ pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 # Initialize class instances
 player_info = PlayerInfo()
 set_console_title = SetConsoleTitle()
-state_handler = StateHandler()
+state_handler = StateHandler(player_info, set_console_title)
 
 
 def on_key_press(key):
@@ -67,9 +67,20 @@ def on_key_press(key):
         state_handler.toggle_autoroll_monitor()
         sleep(0.2)
 
+    elif key == keyboard.Key.f8:
+        print("[STATUS] Toggling destruction handler...")
+        logger.info("[STATUS] Toggling destruction handler...")
+        sleep(0.2)
+        state_handler.toggle_destruction_handler()
+        sleep(0.2)
+
     elif key == keyboard.Key.page_up:
         print("[STATUS] Starting all handlers...")
         logger.info("[STATUS] Starting all handlers...")
+        # Assume che siamo già in home quando si avviano gli handler
+        # Dobbiamo notificare PlayerInfo, non solo shared_state
+        player_info.set_in_home(True)
+        logger.debug("[STATUS] Set in_home_status to True (assumed in home)")
         sleep(0.2)
         try:
             state_handler.toggle_autoroll_handler()
@@ -87,6 +98,8 @@ def on_key_press(key):
             state_handler.toggle_autoroll_monitor()
             sleep(0.2)
             state_handler.toggle_idle_handler()
+            sleep(0.2)
+            state_handler.toggle_destruction_handler()
             sleep(0.2)
         except Exception as e:
             print(e)
@@ -113,6 +126,11 @@ logger.debug("Cache initialized.")
 
 def main():
     state_handler.start_player_info()
+    # Aspetta che i thread PlayerInfo leggano i valori iniziali
+    logger.info("Waiting for PlayerInfo threads to initialize...")
+    sleep(5)
+    logger.info("PlayerInfo initialization complete")
+    
     state_handler.start_set_console_title()
 
     with keyboard.Listener(on_press=on_key_press) as listener:

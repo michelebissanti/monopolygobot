@@ -92,6 +92,7 @@ class BuildingHandler:
         self.all_buildings_upgraded = False
         shared_state.builder_finished = False
         self.current_money = shared_state.money
+        self.minimum_money_to_continue = 1000  # Denaro minimo per continuare a costruire
         # Initialize window coordinates
         (
             self.window_x,
@@ -104,10 +105,10 @@ class BuildingHandler:
         self.buildings = [
             {
                 "name": "building1",
-                "x_percent": 6.3,
-                "y_percent": 86.4,
-                "right_percent": 19,
-                "bottom_percent": 88.9,
+                "x_percent": 37,
+                "y_percent": 86,
+                "right_percent": 40.5,
+                "bottom_percent": 91,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -119,10 +120,10 @@ class BuildingHandler:
             },
             {
                 "name": "building2",
-                "x_percent": 25,
-                "y_percent": 86.4,
-                "right_percent": 38,
-                "bottom_percent": 88.9,
+                "x_percent": 42.5,
+                "y_percent": 86,
+                "right_percent": 46,
+                "bottom_percent": 91,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -134,10 +135,10 @@ class BuildingHandler:
             },
             {
                 "name": "building3",
-                "x_percent": 43.9,
-                "y_percent": 86.4,
-                "right_percent": 56.9,
-                "bottom_percent": 88.9,
+                "x_percent": 48.5,
+                "y_percent": 86,
+                "right_percent": 52,
+                "bottom_percent": 91,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -149,10 +150,10 @@ class BuildingHandler:
             },
             {
                 "name": "building4",
-                "x_percent": 63.4,
-                "y_percent": 86.4,
-                "right_percent": 76.4,
-                "bottom_percent": 88.9,
+                "x_percent": 54.5,
+                "y_percent": 86,
+                "right_percent": 58,
+                "bottom_percent": 91,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -164,10 +165,10 @@ class BuildingHandler:
             },
             {
                 "name": "building5",
-                "x_percent": 81.9,
-                "y_percent": 86.4,
-                "right_percent": 94.3,
-                "bottom_percent": 88.9,
+                "x_percent": 60.5,
+                "y_percent": 86,
+                "right_percent": 64,
+                "bottom_percent": 91,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -269,12 +270,18 @@ class BuildingHandler:
                 build_image = shared_state.load_image(build_path)
                 location = ocr_utils.find(build_image)
                 if location:
-                    logger.debug("[BUILDER] Found build menu icon. Clicking...")
+                    logger.debug(f"[BUILDER] Found build menu icon at {location}. Clicking...")
                     x, y = location
-                    click(x, y)
+                    with shared_state.moveTo_lock:
+                        moveTo(x, y)
+                        sleep(0.2)
+                        click()
                     sleep(2)
                     in_menu = self.check_menu_status()
                     print(in_menu)
+                else:
+                    logger.debug("[BUILDER] Build icon not found, waiting...")
+                    sleep(1)
 
     def check_menu_status(self):
         """
@@ -298,6 +305,7 @@ class BuildingHandler:
         Returns:
             int: The cost of the building upgrade.
         """
+        logger.debug(f"[BUILD-H] Extracting cost from OCR text: '{cost_text}'")
         pattern = r"(\d+(\.\d+)?)([MK]?)"  # Matches numbers with optional decimal point and optional "M" or "K" at the end
         match = re.search(pattern, cost_text)
         if match:
@@ -315,8 +323,10 @@ class BuildingHandler:
                 ",", ""
             )  # Remove commas as digit separators
             self.cost_value = int(float(numeric_part) * conversion_factor)
+            logger.debug(f"[BUILD-H] Converted '{cost_text}' -> {self.cost_value:,}")
             return self.cost_value
         else:
+            logger.debug(f"[BUILD-H] Failed to parse cost from '{cost_text}', returning 0")
             return 0
 
     def gather_board_number(self):
@@ -425,6 +435,17 @@ class BuildingHandler:
         # Save the updated data to the JSON file
         self.save_data()
 
+    def has_enough_money_to_continue(self):
+        """
+        Verifica se c'è ancora abbastanza denaro per continuare a costruire.
+        Returns:
+            bool: True se c'è abbastanza denaro, False altrimenti
+        """
+        with shared_state.money_condition:
+            shared_state.money_condition.wait()
+        self.current_money = shared_state.money
+        return self.current_money >= self.minimum_money_to_continue
+
     def exit_build_menu(self):
         """
         Exits the game's build menu.
@@ -500,12 +521,24 @@ class BuildingHandler:
                         ocr_utils.screenshot(name)
                     except Exception as e:
                         print(e) """
+                    # Verifica se ci sono ancora abbastanza soldi per continuare
+                    if not self.has_enough_money_to_continue():
+                        logger.debug(f"[BUILDER] Not enough money to continue building. Current money: {self.current_money}")
+                        self.all_buildings_upgraded = True
+                        break
+                    
                     # Gather building cost
                     for building_info in self.buildings:
                         in_menu = self.check_menu_status()
                         while not in_menu:
                             in_menu = self.check_menu_status()
                             sleep(1)
+                        
+                        # Controlla se ci sono ancora soldi prima di ogni building
+                        if not self.has_enough_money_to_continue():
+                            logger.debug(f"[BUILDER] Not enough money to continue. Stopping build cycle.")
+                            self.all_buildings_upgraded = True
+                            break
                         self.current_building_info = building_info
                         # Get building name and coordinates
                         building_name = building_info["name"]
@@ -532,9 +565,9 @@ class BuildingHandler:
                             r"--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789.MK"
                         )
                         process_settings = {
-                            "threshold_value": 74,
-                            "invert": False,
-                            "scale_factor": 2,
+                            "threshold_value": 100,
+                            "invert": True,
+                            "scale_factor": 3,
                         }
                         # Check if building is finished
                         finished = ocr_utils.find(
@@ -546,6 +579,7 @@ class BuildingHandler:
                                 y_percent,
                                 right_percent,
                                 bottom_percent,
+                                output_image_path=f"debug_cost_{building_name}_lvl{building_info['upgrade_level']}.png",
                                 ocr_settings=ocr_settings,
                                 process_settings=process_settings,
                             )
@@ -601,13 +635,25 @@ class BuildingHandler:
                             if (
                                 cost > 0
                             ):  # If cost is 0, building is already at max level
-                                with shared_state.moveTo_lock:
-                                    moveTo(self.x, self.y)
-                                    click()
-                                building_info[
-                                    "upgrade_level"
-                                ] += 1  # Increment upgrade level
-                                logger.debug(f"[BUILDER] Upgraded {building_name}.")
+                                # Verifica se ci sono abbastanza soldi prima di costruire
+                                with shared_state.money_condition:
+                                    shared_state.money_condition.wait()
+                                self.current_money = shared_state.money
+                                
+                                if self.current_money >= cost:
+                                    with shared_state.moveTo_lock:
+                                        moveTo(self.x, self.y)
+                                        click()
+                                    building_info[
+                                        "upgrade_level"
+                                    ] += 1  # Increment upgrade level
+                                    logger.debug(f"[BUILDER] Upgraded {building_name}. Money left: {self.current_money - cost}")
+                                    sleep(0.5)  # Piccola pausa per aggiornamento money
+                                else:
+                                    logger.debug(f"[BUILDER] Not enough money to upgrade {building_name}. Need {cost}, have {self.current_money}.")
+                                    # Non ci sono abbastanza soldi, esci dal loop di building
+                                    self.all_buildings_upgraded = True
+                                    break
 
                                 if any(
                                     building_info["upgrade_level"] <= 5
@@ -630,9 +676,20 @@ class BuildingHandler:
 
                     if (
                         self.all_buildings_upgraded
-                    ):  # If all buildings are upgraded, exit build menu
-                        logger.debug("[BUILDER] All buildings upgraded.")
-                        break
+                    ):  # If all buildings are upgraded or no money left, check if can continue
+                        # Controlla se ci sono ancora abbastanza soldi per un altro ciclo
+                        if self.has_enough_money_to_continue():
+                            logger.debug("[BUILDER] All buildings upgraded for this cycle. Checking if can start another cycle...")
+                            # Resetta gli upgrade_level per il prossimo ciclo
+                            for building_info in self.buildings:
+                                building_info["upgrade_level"] = 0
+                            self.all_buildings_upgraded = False
+                            logger.debug("[BUILDER] Starting new build cycle...")
+                            sleep(1)
+                            # Continua il loop senza break
+                        else:
+                            logger.debug("[BUILDER] All buildings upgraded and no money left to continue.")
+                            break
                 else:
                     self.board_name = None
                     self.enter_build_menu()

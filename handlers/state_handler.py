@@ -1,7 +1,5 @@
 from threading import Thread
 from shared_state import shared_state
-from utils.player_info import PlayerInfo
-from utils.set_console_title import SetConsoleTitle
 from handlers import (
     autoroll_handler,
     bank_heist_handler,
@@ -11,28 +9,30 @@ from handlers import (
     multiplier_monitor,
     autoroll_monitor,
     idle_handler,
+    destruction_handler,
 )
 from time import sleep
 from utils.logger import logger
 
-player_info = PlayerInfo()
-set_console_title = SetConsoleTitle()
-
 
 class StateHandler:
-    def __init__(self):
+    def __init__(self, player_info_instance, set_console_title_instance):
         self.ar_handler_instance = autoroll_handler.AutoRollHandler()
+        self.player_info = player_info_instance
+        self.set_console_title = set_console_title_instance
 
     def start_player_info(self):
-        threads = [
-            Thread(target=player_info.run, daemon=True, name="player_info"),
-        ]
-        for thread in threads:
-            thread.start()
+        # Avvia PlayerInfo in un thread separato per evitare blocking
+        player_info_thread = Thread(target=self.player_info.run, daemon=True, name="player_info")
+        player_info_thread.start()
+        # Aspetta che il thread si avvii
+        while not player_info_thread.is_alive():
+            sleep(0.1)
+        logger.debug("[STATE] PlayerInfo thread started successfully")
 
     def start_set_console_title(self):
         threads = [
-            Thread(target=set_console_title.run, daemon=True, name="set_console_title"),
+            Thread(target=self.set_console_title.run, daemon=True, name="set_console_title"),
         ]
         for thread in threads:
             thread.start()
@@ -237,4 +237,12 @@ class StateHandler:
             "autoroll_monitor_running",
             "autoroll_monitor_thread",
             self.start_autoroll_monitor,
+        )
+
+    def toggle_destruction_handler(self):
+        self._toggle_handler(
+            "destruction",
+            "destruction_handler_running",
+            "destruction_handler_thread",
+            destruction_handler.DestructionHandler().run,
         )

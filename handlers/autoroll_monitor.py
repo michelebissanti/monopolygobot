@@ -56,6 +56,12 @@ class AutorollMonitor:
                     with shared_state.rolls_condition:
                         shared_state.rolls_condition.wait()
                         self.current_rolls = shared_state.rolls
+                    
+                    # Aspetta che rolls sia inizializzato
+                    if self.current_rolls is None:
+                        sleep(1)
+                        continue
+                    
                     if self.current_rolls < self.minimum_rolls and autoroller_running:
                         logger.debug(
                             "[AR-M] Rolls are less than minimum rolls. Stopping autoroller..."
@@ -101,6 +107,11 @@ class AutorollMonitor:
                             lambda: shared_state.rolls != self.current_rolls
                         )
                         self.current_rolls = shared_state.rolls
+                        
+                        # Aspetta che rolls sia inizializzato
+                        if self.current_rolls is None:
+                            sleep(1)
+                            continue
                 else:
                     if shared_state.idle_event.is_set():
                         logger.debug("[AR-M] Paused. Waiting to resume...")

@@ -43,6 +43,7 @@ class PlayerInfo:
         """
         Thread function to continuously monitor and update the player's money.
         """
+        last_known_money = 0  # Inizializza a 0
         while True:
             if self.in_home_status:
                 x_percent = 33.5
@@ -59,30 +60,43 @@ class PlayerInfo:
                 money_text = "".join(filter(str.isdigit, money_text))
 
                 if money_text.isdigit():
-                    self.set_money(int(money_text))
+                    new_money = int(money_text)
+                    self.set_money(new_money)
                     last_known_money = self.money
+                    # Log ogni 60 secondi circa
+                    if not hasattr(self, '_money_log_counter'):
+                        self._money_log_counter = 0
+                    self._money_log_counter += 1
+                    if self._money_log_counter % 60 == 0:
+                        logger.debug(f"[PLAYER-INFO] Money updated: {new_money:,}")
                 else:
                     self.set_money(last_known_money)
+                sleep(0.5)  # Controlla ogni 0.5 secondi
             else:
+                logger.debug("[PLAYER-INFO] Money thread waiting for in_home_status...")
                 with self.in_home_condition:
                     self.in_home_condition.wait_for(lambda: self.in_home_status)
+                logger.debug("[PLAYER-INFO] Money thread: in_home_status became True!")
+                sleep(1)
 
     def rolls_thread(self):
         """
         Thread function to continuously monitor and update the player's rolls.
         """
+        last_known_rolls = 0  # Inizializza a 0
+        last_known_roll_capacity = 50  # Inizializza a 50
         while True:
             if self.in_home_status:
                 x_percent, y_percent, right_percent, bottom_percent = (
-                    35,
-                    91.77,
-                    60,
-                    94.3,
+                    43,
+                    92,
+                    57,
+                    94.5,
                 )
                 process_settings = {
-                    "threshold_value": 240,
+                    "threshold_value": 100,
                     "invert": True,
-                    "scale_factor": 4,
+                    "scale_factor": 3,
                 }
                 rolls_text = ocr_utils.ocr_to_str(
                     x_percent,
@@ -104,34 +118,43 @@ class PlayerInfo:
                         self.set_rolls(rolls)
                         last_known_rolls = rolls
                         last_known_roll_capacity = roll_capacity
+                        # Log ogni volta che i rolls cambiano
+                        if not hasattr(self, '_last_logged_rolls'):
+                            self._last_logged_rolls = -1
+                        if rolls != self._last_logged_rolls:
+                            logger.debug(f"[PLAYER-INFO] Rolls updated: {rolls}/{roll_capacity}")
+                            self._last_logged_rolls = rolls
 
                     except ValueError:
                         self.set_rolls(last_known_rolls)
                 else:
                     self.set_rolls(last_known_rolls)
+                sleep(0.5)  # Controlla ogni 0.5 secondi
             else:
                 with self.in_home_condition:
                     self.in_home_condition.wait_for(lambda: self.in_home_status)
+                sleep(1)
 
     def multiplier_thread(self):
         """
         Thread function to continuously monitor and update the player's multiplier.
         """
+        last_known_multiplier = 1  # Inizializza a 1
         while True:
             if self.in_home_status:
                 x_percent, y_percent, right_percent, bottom_percent = (
-                    61,
-                    70.5,
-                    71,
-                    73.3,
+                    53,
+                    70,
+                    57,
+                    73,
                 )
                 mp_ocr_settings = (
                     r"--psm 7 --oem 3 -c tessedit_char_whitelist=x0123456789"
                 )
                 mp_process_settings = {
-                    "threshold_value": 245,
-                    "invert": True,
-                    "scale_factor": 4,
+                    "threshold_value": None,
+                    "invert": False,
+                    "scale_factor": 3,
                 }
                 multiplier_text = ocr_utils.ocr_to_str(
                     x_percent,
@@ -154,22 +177,26 @@ class PlayerInfo:
             else:
                 with self.in_home_condition:
                     self.in_home_condition.wait_for(lambda: self.in_home_status)
+                sleep(1)
 
     def rolling_status_thread(self):
         """
         Thread function to continuously monitor and update the player's rolling status.
         """
+        # Carica l'immagine UNA VOLTA all'inizio
+        autoroll_image_path = os.path.join(
+            self.current_path, "images", "autoroll.png"
+        )
+        autoroll_image = shared_state.load_image(autoroll_image_path)
+        
         while True:
             if self.in_home_status:
-                autoroll_image_path = os.path.join(
-                    self.current_path, "images", "autoroll.png"
-                )
-                autoroll_image = shared_state.load_image(autoroll_image_path)
                 autoroll_location = ocr_utils.find(autoroll_image)
                 if autoroll_location:
                     self.set_rolling(True)
                 else:
                     self.set_rolling(False)
+                sleep(0.5)  # Controlla ogni 0.5 secondi
             else:
                 with self.in_home_condition:
                     self.in_home_condition.wait_for(lambda: self.in_home_status)
@@ -178,16 +205,28 @@ class PlayerInfo:
         """
         Thread function to continuously monitor and update the player's in home status.
         """
+        check_count = 0
+        logger.debug(f"[PLAYER-INFO] In-Home thread started. Window coords: {shared_state.window_coords}")
+        
+        # Carica l'immagine UNA VOLTA all'inizio invece che ad ogni iterazione
+        in_home_image_path = os.path.join(
+            self.current_path, "images", "in-home-icon.png"
+        )
+        in_home_image = shared_state.load_image(in_home_image_path)
+        logger.debug(f"[PLAYER-INFO] In-Home icon loaded: {in_home_image.shape if in_home_image is not None else 'None'}")
+        
+        # WORKAROUND: Il template matching non funziona con molti thread contemporanei
+        # Aspettiamo che in_home_status venga impostato a True da main.py (quando si preme Page Up)
+        # poi manteniamo True senza ulteriori controlli
+        logger.debug("[PLAYER-INFO] Waiting for in_home_status to be set to True...")
+        with self.in_home_condition:
+            self.in_home_condition.wait_for(lambda: self.in_home_status)
+        
+        logger.debug("[PLAYER-INFO] in_home_status is now True. Maintaining True state.")
+        
+        # Una volta True, manteniamo True senza fare altri controlli
         while True:
-            in_home_image_path = os.path.join(
-                self.current_path, "images", "in-home-icon.png"
-            )
-            in_home_image = shared_state.load_image(in_home_image_path)
-            in_home_location = ocr_utils.find(in_home_image)
-            if in_home_location:
-                self.set_in_home(True)
-            else:
-                self.set_in_home(False)
+            sleep(5)  # Sleep lungo, non facciamo più controlli
 
     def set_money(self, money):
         """
@@ -238,6 +277,10 @@ class PlayerInfo:
         """
         Runs each thread to monitor and update the player's money, rolls, multiplier, rolling status, and in home status.
         """
+        logger.debug("[PLAYER-INFO] ========================================")
+        logger.debug("[PLAYER-INFO] PlayerInfo STARTING all threads...")
+        logger.debug("[PLAYER-INFO] ========================================")
+        
         threads = {
             "money": Thread(
                 target=self.money_thread, daemon=True, name="playerinfo.money"
@@ -261,5 +304,8 @@ class PlayerInfo:
                 name="playerinfo.in_home_status",
             ),
         }
-        for thread in threads.values():
+        for thread_name, thread in threads.items():
             thread.start()
+            logger.debug(f"[PLAYER-INFO] Started thread: {thread_name}")
+        
+        logger.debug("[PLAYER-INFO] All threads started successfully")

@@ -57,12 +57,13 @@ class SharedState:
         self.shut_down_handler_running = False
         self.ui_handler_running = False
         self.idle_handler_running = False
+        self.destruction_handler_running = False
 
         self.multiplier_handler_running = False
         self.multiplier_monitor_running = False
 
-        self.money = 0
-        self.rolls = 0
+        self.money = None  # Inizializzato a None, verrà impostato da PlayerInfo
+        self.rolls = None  # Inizializzato a None, verrà impostato da PlayerInfo
         self.multiplier = 1
         self.BUILD_START_AMOUNT = 1
         self.rolling_status = False
@@ -82,6 +83,7 @@ class SharedState:
         self.shut_down_condition = Condition()
         self.ui_condition = Condition()
         self.idle_condition = Condition()
+        self.destruction_condition = Condition()
 
         self.multiplier_condition = Condition()
         self.multiplier_monitor_condition = Condition()
@@ -102,7 +104,7 @@ class SharedState:
         self.start_disable_autoroller_lock = RLock()
         self.stop_disable_autoroller_lock = RLock()
         # Thread barrier
-        self.thread_barrier = Barrier(8)
+        self.thread_barrier = Barrier(9)
         # Events
         self.multiplier_handler_event = Event()
         self.builder_event = Event()
@@ -122,7 +124,7 @@ class SharedState:
 
     def moveto_center(self):
         with self.moveTo_lock:
-            moveTo(self.window_center_x, self.window_center_y, duration=0.2)
+            moveTo(self.window_x + self.window_center_x, self.window_y + self.window_center_y, duration=0.2)
 
 
 shared_state = SharedState()

@@ -1,5 +1,6 @@
 from utils.ocr_utils import OCRUtils
-from pyautogui import press
+from pyautogui import moveTo
+from pydirectinput import click
 from shared_state import shared_state
 import os
 from utils.logger import logger
@@ -28,12 +29,27 @@ class AutoRoller:
 
             point = ocr_utils.find(go_image)
             if point is not None:
-                logger.debug("[AUTOROLL] AutoRoll is not active. AutoRolling...")
-                with shared_state.press_lock:
-                    press("num0")
-                    sleep(10)
+                logger.debug(f"[AUTOROLL] GO button found at ({point[0]}, {point[1]}). Clicking to activate autoroll...")
+                
+                # Clicca direttamente sul pulsante GO rilevato
+                with shared_state.moveTo_lock:
+                    moveTo(point[0], point[1])
+                    sleep(0.3)
+                    click()
+                    sleep(1)
+                
+                # Muovi il mouse al centro per non bloccare la vista
+                shared_state.moveto_center()
+                
+                # Attendi che il gioco inizi a rollare
+                sleep(10)
+            else:
+                # Se GO non trovato, attendi un po' prima di riprovare
+                sleep(1)
+                
             with shared_state.rolling_condition:
                 shared_state.rolling_condition.wait_for(
                     lambda: not shared_state.rolling_status, timeout=5
                 )
         logger.debug("[AUTOROLL] Exiting autoroll...")
+

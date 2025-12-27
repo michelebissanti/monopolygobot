@@ -44,11 +44,11 @@ class OCRUtils:
             bbox (tuple, optional): The region of the screen to search within (left, top, right, bottom).
 
         Returns:
-            pyscreeze.Point | None: The coordinates of the found match center, or None if not found.
+            pyscreeze.Point | None: The coordinates of the found match center in absolute screen coordinates, or None if not found.
         """
         try:
             if bbox is None:
-                bbox = self.window_size
+                bbox = self.window_coords
             screenshot = ImageGrab.grab(
                 bbox=bbox
             )  # Capture a screenshot of the specified region
@@ -61,11 +61,17 @@ class OCRUtils:
             if loc[0].size == 0:
                 return None
 
-            # Get the coordinates of the match
+            # Get the coordinates of the match relative to the bbox
             y, x = loc[0][0], loc[1][0]
-            match_center = (x + template.shape[1] // 2, y + template.shape[0] // 2)
+            match_center_relative = (x + template.shape[1] // 2, y + template.shape[0] // 2)
+            
+            # Convert to absolute screen coordinates by adding bbox offset
+            match_center_absolute = (
+                match_center_relative[0] + bbox[0],
+                match_center_relative[1] + bbox[1]
+            )
 
-            return match_center
+            return match_center_absolute
         except OSError:
             print("[OCR] Screen grab failed")
             return None

@@ -12,14 +12,16 @@ ocr_utils = OCRUtils()
 
 class IdleHandler:
     def __init__(self):
+        self.window_x = shared_state.window_x
+        self.window_y = shared_state.window_y
         self.window_width = shared_state.window_width
         self.window_height = shared_state.window_height
         self.window_center_x = shared_state.window_center_x
         self.window_center_y = shared_state.window_center_y
-        self.friends_button_x = int(self.window_width * (83.8 / 100))
-        self.friends_button_y = int(self.window_height * (90.7 / 100))
-        self.exit_button_x = int(self.window_width * (47.4 / 100))
-        self.exit_button_y = int(self.window_height * (96.8 / 100))
+        self.friends_button_x = self.window_x + int(self.window_width * (83.8 / 100))
+        self.friends_button_y = self.window_y + int(self.window_height * (90.7 / 100))
+        self.exit_button_x = self.window_x + int(self.window_width * (47.4 / 100))
+        self.exit_button_y = self.window_y + int(self.window_height * (96.8 / 100))
         self.invite_count_x_percent = 36.5
         self.invite_count_y_percent = 68.6
         self.invite_count_width_percent = 58.6
@@ -64,6 +66,8 @@ class IdleHandler:
         shared_state.thread_barrier.wait()
         logger.debug("[IDLE] Received notification! Starting...")
 
+        MINIMUM_MONEY_TO_BUILD = 1000  # Denaro minimo necessario per il build
+
         while True:
             # Check conditions for idle actions
             rolls = shared_state.rolls
@@ -71,9 +75,15 @@ class IdleHandler:
             builder_running = shared_state.builder_running
             autoroller_running = shared_state.autoroller_running
             multiplier_handler_running = shared_state.multiplier_handler_running
+            
+            # Aspetta che rolls e money siano inizializzati
+            if rolls is None or money is None:
+                sleep(2)
+                continue
+            
             if (
                 rolls < shared_state.AR_RESUME_ROLLS
-                and money < shared_state.BUILD_START_AMOUNT
+                and money < MINIMUM_MONEY_TO_BUILD
                 and not builder_running
                 and not autoroller_running
                 and not multiplier_handler_running
