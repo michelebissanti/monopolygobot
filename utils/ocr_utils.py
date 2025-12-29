@@ -55,7 +55,11 @@ class OCRUtils:
             screenshot_cv = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
 
             res = cv2.matchTemplate(screenshot_cv, template, cv2.TM_CCOEFF_NORMED)
-            threshold = 0.75  # Adjust the threshold as needed
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            # from utils.logger import logger
+            # logger.debug(f"[OCR] Match confidence: {max_val:.2f}") 
+            
+            threshold = 0.60  # Aggressively lowered to 0.60
             loc = np.where(res >= threshold)
 
             if loc[0].size == 0:

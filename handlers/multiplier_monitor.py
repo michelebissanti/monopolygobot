@@ -26,7 +26,9 @@ class MultiplierMonitor:
 
     def calculate_correct_multiplier(self, rolls, event):
         if event:
-            if rolls < 50:
+            if rolls < 20:
+                return 1
+            elif rolls < 50:
                 return 3
             elif rolls < 100:
                 return 5
@@ -41,7 +43,9 @@ class MultiplierMonitor:
             else:
                 return 1
         if not event:
-            if rolls < 50:
+            if rolls < 20:
+                return 1
+            elif rolls < 50:
                 return 3
             elif rolls < 100:
                 return 5
@@ -112,6 +116,13 @@ class MultiplierMonitor:
                         not shared_state.multiplier_handler_running
                         and multiplier < correct_multiplier
                     ):
+                        # Check cooldown (prevent infinite loop if we can't hit target)
+                        current_time = __import__("time").time()
+                        if hasattr(self, 'last_failure_time') and (current_time - self.last_failure_time < 60):
+                             logger.debug("[MP-M] In cooldown (failed recently). Skipping multiplier update.")
+                             sleep(5)
+                             continue
+
                         logger.debug(
                             f"[MP-M] Multiplier should be {correct_multiplier}. Starting multiplier handler..."
                         )
@@ -157,6 +168,14 @@ class MultiplierMonitor:
                             )
                         logger.debug("[MP-M] Multiplier handler finished")
                         self.update_multiplier_handler_running(False)
+                        
+                        # Check result
+                        if shared_state.multiplier != correct_multiplier:
+                             logger.warning(f"[MP-M] Failed to reach target multiplier {correct_multiplier} (Current: {shared_state.multiplier}). Entering cooldown...")
+                             self.last_failure_time = __import__("time").time()
+                        else:
+                             # Clear failure time on success
+                             if hasattr(self, 'last_failure_time'): del self.last_failure_time
                     elif (
                         shared_state.multiplier_handler_running
                         and shared_state.multiplier >= correct_multiplier

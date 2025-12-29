@@ -58,6 +58,7 @@ class SharedState:
         self.ui_handler_running = False
         self.idle_handler_running = False
         self.destruction_handler_running = False
+        self.popup_handled = False
 
         self.multiplier_handler_running = False
         self.multiplier_monitor_running = False

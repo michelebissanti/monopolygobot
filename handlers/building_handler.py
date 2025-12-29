@@ -482,223 +482,130 @@ class BuildingHandler:
     def run(self):
         """
         Main method that manages the building process in the game.
-        Exits upon completing all building upgrades.
+        Exits upon completing all building upgrades or encountering 3 consecutive UI popups.
         """
         building_finished_path = os.path.join(
             self.current_path, "images", "building-finished.png"
         )
         building_finished_image = shared_state.load_image(building_finished_path)
+        
         in_menu = self.check_menu_status()
         if not in_menu:
             self.enter_build_menu()
+            
         with shared_state.builder_running_condition:
             shared_state.builder_running_condition.wait_for(
                 lambda: shared_state.builder_running
             )
-        while True:  # Loop until builder_running is False
-            self.board_name = self.gather_board_name()  # Get board name
-            self.board_number = self.gather_board_number()  # Get board number
-            while (
-                self.board_name != "" or self.board_name is not None
-            ):  # Loop until board name is empty or None
-                in_menu = self.check_menu_status()
-                if in_menu:
-                    self.board_name = self.gather_board_name()
-                    self.current_board_data["board_name"] = self.board_name
-                    if self.board_name == "" or self.board_name is None:
-                        break
-                    # Screenshot the window for data verification
-                    """ base_name = shared_state.current_path + self.board_name + ".png"
-                    counter = 1
-                    name = base_name
-                    while os.path.exists(name):
-                        name = (
-                            shared_state.current_path
-                            + f"{self.board_name}_{counter}.png"
-                        )
-                        counter += 1
-                    try:
-                        ocr_utils.screenshot(name)
-                    except Exception as e:
-                        print(e) """
-                    # Verifica se ci sono ancora abbastanza soldi per continuare
-                    if not self.has_enough_money_to_continue():
-                        logger.debug(f"[BUILDER] Not enough money to continue building. Current money: {self.current_money}")
-                        self.all_buildings_upgraded = True
-                        break
+            
+        consecutive_popups = 0
+        
+        while True:
+            # Check exit condition based on popups
+            if consecutive_popups >= 3:
+                logger.debug("[BUILDER] 3 Consecutive UI popups detected. Assuming money is spent. Exiting...")
+                break
+                
+            self.board_name = self.gather_board_name()
+            # If board name invalid, try to re-enter or continue
+            
+            # Update Money from shared state
+            with shared_state.money_condition:
+                if shared_state.money is not None:
+                    self.current_money = shared_state.money
+                
+            # Iterate through buildings
+            actions_taken_in_this_cycle = 0
+            
+            for building_info in self.buildings:
+                # Check popup limit immediately
+                if consecutive_popups >= 3:
+                    break
                     
-                    # Gather building cost
-                    for building_info in self.buildings:
-                        in_menu = self.check_menu_status()
-                        while not in_menu:
-                            in_menu = self.check_menu_status()
-                            sleep(1)
-                        
-                        # Controlla se ci sono ancora soldi prima di ogni building
-                        if not self.has_enough_money_to_continue():
-                            logger.debug(f"[BUILDER] Not enough money to continue. Stopping build cycle.")
-                            self.all_buildings_upgraded = True
-                            break
-                        self.current_building_info = building_info
-                        # Get building name and coordinates
-                        building_name = building_info["name"]
-                        x_percent = building_info["x_percent"]
-                        y_percent = building_info["y_percent"]
-                        right_percent = building_info["right_percent"]
-                        bottom_percent = building_info["bottom_percent"]
-                        self.x = int(
-                            self.window_x + (self.window_width * (x_percent / 100))
-                        )
-                        self.y = int(
-                            self.window_y + (self.window_height * (y_percent / 100))
-                        )
-                        self.right = int(
-                            self.window_x + (self.window_width * (right_percent / 100))
-                        )
-                        self.bottom = int(
-                            self.window_y
-                            + (self.window_height * (bottom_percent / 100))
-                        )
-                        self.coords = (self.x, self.y, self.right, self.bottom)
-                        logger.debug(f"[BUILDER] Getting cost of {building_name}...")
-                        ocr_settings = (
-                            r"--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789.MK"
-                        )
-                        process_settings = {
-                            "threshold_value": 100,
-                            "invert": True,
-                            "scale_factor": 3,
-                        }
-                        # Check if building is finished
-                        finished = ocr_utils.find(
-                            building_finished_image, bbox=self.coords
-                        )
-                        if not finished:
-                            cost_text = ocr_utils.ocr_to_str(
-                                x_percent,
-                                y_percent,
-                                right_percent,
-                                bottom_percent,
-                                output_image_path=f"debug_cost_{building_name}_lvl{building_info['upgrade_level']}.png",
-                                ocr_settings=ocr_settings,
-                                process_settings=process_settings,
-                            )
-                            cost = self.extract_and_convert_cost(cost_text)
-                            logger.debug(
-                                f"[BUILDER] Cost of {building_name} at upgrade level {building_info['upgrade_level']} is {cost}."
-                            )
-                            if (
-                                cost <= 1000 and cost > 0
-                            ):  # If cost is too low, retry until cost is updated
-                                logger.debug(
-                                    f"[BUILDER] Cost of {building_name} is too low, waiting and retrying..."
-                                )
-                                sleep(1)
-                                cost_text = ocr_utils.ocr_to_str(
-                                    x_percent,
-                                    y_percent,
-                                    right_percent,
-                                    bottom_percent,
-                                    output_image_path=f"{building_name}.png",
-                                    ocr_settings=ocr_settings,
-                                    process_settings=process_settings,
-                                )
-                                cost = self.extract_and_convert_cost(cost_text)
-                                with shared_state.money_condition:
-                                    shared_state.money_condition.wait()
-                                self.current_money = shared_state.money
-                                logger.debug(
-                                    f"[BUILDER] Current money is {self.current_money}."
-                                )
-                            building_info[  # Update building info with cost
-                                f"upgrade{building_info['upgrade_level']}"
-                            ] = cost
-                            self.current_board_data[
-                                building_name
-                            ] = {  # Update current board data with building info, ignoring coordinates and upgrade level
-                                key: value
-                                for key, value in building_info.items()
-                                if key
-                                not in [
-                                    "x_percent",
-                                    "y_percent",
-                                    "right_percent",
-                                    "bottom_percent",
-                                    "upgrade_level",
-                                ]
-                            }
-                            """ logger.debug(
-                                f"[BUILDER] Updated current board data: {self.current_board_data}"
-                            ) """
-                            self.update_and_append_board_data()
-                            # Upgrade building
-                            if (
-                                cost > 0
-                            ):  # If cost is 0, building is already at max level
-                                # Verifica se ci sono abbastanza soldi prima di costruire
-                                with shared_state.money_condition:
-                                    shared_state.money_condition.wait()
-                                self.current_money = shared_state.money
-                                
-                                if self.current_money >= cost:
-                                    with shared_state.moveTo_lock:
-                                        moveTo(self.x, self.y)
-                                        click()
-                                    building_info[
-                                        "upgrade_level"
-                                    ] += 1  # Increment upgrade level
-                                    logger.debug(f"[BUILDER] Upgraded {building_name}. Money left: {self.current_money - cost}")
-                                    sleep(0.5)  # Piccola pausa per aggiornamento money
-                                else:
-                                    logger.debug(f"[BUILDER] Not enough money to upgrade {building_name}. Need {cost}, have {self.current_money}.")
-                                    # Non ci sono abbastanza soldi, esci dal loop di building
-                                    self.all_buildings_upgraded = True
-                                    break
-
-                                if any(
-                                    building_info["upgrade_level"] <= 5
-                                    for building_info in self.buildings
-                                ):
-                                    self.all_buildings_upgraded = False
-                                else:
-                                    self.all_buildings_upgraded = True
-                                    self.update_total_cost_in_json()
-                    # Screenshot the window
-                    """ try:
-                        name = (
-                            self.board_name
-                            + str(building_info["upgrade_level"])
-                            + ".png"
-                        )
-                        ocr_utils.screenshot(name)
-                    except Exception as e:
-                        print(e) """
-
-                    if (
-                        self.all_buildings_upgraded
-                    ):  # If all buildings are upgraded or no money left, check if can continue
-                        # Controlla se ci sono ancora abbastanza soldi per un altro ciclo
-                        if self.has_enough_money_to_continue():
-                            logger.debug("[BUILDER] All buildings upgraded for this cycle. Checking if can start another cycle...")
-                            # Resetta gli upgrade_level per il prossimo ciclo
-                            for building_info in self.buildings:
-                                building_info["upgrade_level"] = 0
-                            self.all_buildings_upgraded = False
-                            logger.debug("[BUILDER] Starting new build cycle...")
-                            sleep(1)
-                            # Continua il loop senza break
-                        else:
-                            logger.debug("[BUILDER] All buildings upgraded and no money left to continue.")
-                            break
-                else:
-                    self.board_name = None
+                # Ensure we are in menu
+                if not self.check_menu_status():
+                    logger.debug("[BUILDER] Lost menu focus, trying to re-enter...")
                     self.enter_build_menu()
-            logger.debug("[BUILDER] Exiting building handler...")
-            logger.debug("[BUILDER] Saving data to JSON...")
-            self.save_data()
-            with shared_state.builder_finished_condition:
-                shared_state.builder_finished = (
-                    True  # Notify building_monitor that building is finished
+                
+                building_name = building_info["name"]
+                x_percent = building_info["x_percent"]
+                y_percent = building_info["y_percent"]
+                right_percent = building_info["right_percent"]
+                bottom_percent = building_info["bottom_percent"]
+                
+                # Calculate coordinates
+                self.x = int(self.window_x + (self.window_width * (x_percent / 100)))
+                self.y = int(self.window_y + (self.window_height * (y_percent / 100)))
+                self.right = int(self.window_x + (self.window_width * (right_percent / 100)))
+                self.bottom = int(self.window_y + (self.window_height * (bottom_percent / 100)))
+                
+                # Attempt OCR
+                ocr_settings = r"--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789.MK"
+                process_settings = {"threshold_value": 100, "invert": True, "scale_factor": 3}
+                
+                cost_text = ocr_utils.ocr_to_str(
+                    x_percent, y_percent, right_percent, bottom_percent,
+                    ocr_settings=ocr_settings,
+                    process_settings=process_settings
                 )
-                shared_state.builder_finished_condition.notify_all()
-            break
+                cost = self.extract_and_convert_cost(cost_text)
+                
+                should_click = False
+                
+                if cost > 0:
+                    # Valid cost detected
+                    if self.current_money >= cost:
+                        logger.debug(f"[BUILDER] Cost {cost} <= Money {self.current_money}. Clicking {building_name}...")
+                        should_click = True
+                    else:
+                        logger.debug(f"[BUILDER] Cost {cost} > Money {self.current_money}. Skipping {building_name}.")
+                        should_click = False
+                else:
+                    # Invalid/Unknown cost -> Blind Click
+                    logger.debug(f"[BUILDER] Cost unknown for {building_name}. Blind clicking...")
+                    should_click = True
+                
+                if should_click:
+                    with shared_state.moveTo_lock:
+                        moveTo(self.x, self.y)
+                        click()
+                    actions_taken_in_this_cycle += 1
+                    sleep(1.5) # Wait for animation/potential popup
+                    
+                    # Check for popup
+                    # We need to check if the UI handler flagged a popup
+                    popup_detected = False
+                    with shared_state.ui_condition:
+                        if shared_state.popup_handled:
+                            popup_detected = True
+                            shared_state.popup_handled = False # Reset
+                    
+                    if popup_detected:
+                        consecutive_popups += 1
+                        logger.debug(f"[BUILDER] Popup detected! Consecutive count: {consecutive_popups}")
+                    else:
+                        consecutive_popups = 0 # Reset on success/no-popup
+                        
+                    # Update money after action
+                    with shared_state.money_condition:
+                        shared_state.money_condition.wait(timeout=0.5)
+                        self.current_money = shared_state.money if shared_state.money is not None else self.current_money
+                else:
+                    sleep(0.1)
+
+            # If we cycled through all buildings and didn't click anything (because we knew we had no money), exit
+            if actions_taken_in_this_cycle == 0 and consecutive_popups < 3:
+                # Double check money logic? 
+                # If we skipped everything because Money < Cost, we are done.
+                logger.debug("[BUILDER] No actions taken in this cycle (Money insufficient for known costs). Exiting...")
+                break
+                
+            sleep(1) 
+
+        # Cleanup and Exit
+        logger.debug("[BUILDER] Exiting building handler...")
+        self.save_data()
+        self.exit_build_menu() # Try to exit gracefully
+        with shared_state.builder_finished_condition:
+            shared_state.builder_finished = True
+            shared_state.builder_finished_condition.notify_all()

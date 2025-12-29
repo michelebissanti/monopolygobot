@@ -54,17 +54,19 @@ class AutorollMonitor:
                             shared_state.disable_autoroller_running
                         )
                     with shared_state.rolls_condition:
-                        shared_state.rolls_condition.wait()
+                        shared_state.rolls_condition.wait(timeout=1)
                         self.current_rolls = shared_state.rolls
                     
-                    # Aspetta che rolls sia inizializzato
+                    # If rolls are None (unknown), we default to STARTING (assuming we have dice),
+                    # and rely on the Autoroller '3-popup' fallback to stop us.
                     if self.current_rolls is None:
-                        sleep(1)
-                        continue
+                        logger.debug("[AR-M] Rolls unknown (None). Assuming enough dice to start...")
+                        # Proceed with logic treating it as "Enough Dice"
                     
-                    if self.current_rolls < self.minimum_rolls and autoroller_running:
+                    # Stop Condition: Known rolls < 1 (Strict "No Dice")
+                    if self.current_rolls is not None and self.current_rolls < 1 and autoroller_running:
                         logger.debug(
-                            "[AR-M] Rolls are less than minimum rolls. Stopping autoroller..."
+                            "[AR-M] Rolls < 1. Stopping autoroller..."
                         )
                         if autoroller_running:
                             with shared_state.stop_autoroller_lock:
@@ -81,11 +83,11 @@ class AutorollMonitor:
                                         lambda: shared_state.disable_autoroller_running
                                     )
                     if (
-                        self.current_rolls >= self.resume_rolls
+                        (self.current_rolls is None or self.current_rolls >= 1)
                         and not autoroller_running
                     ):
                         logger.debug(
-                            "[AR-M] Rolls are greater than resume rolls. Starting autoroller..."
+                            "[AR-M] Rolls >= 1 (or None). Starting autoroller..."
                         )
                         if disable_autoroller_running:
                             with shared_state.stop_disable_autoroller_lock:

@@ -44,6 +44,7 @@ class PlayerInfo:
         Thread function to continuously monitor and update the player's money.
         """
         last_known_money = 0  # Inizializza a 0
+        self.set_money(last_known_money) # Initialize immediately to unblock
         while True:
             if self.in_home_status:
                 x_percent = 33.5
@@ -83,8 +84,9 @@ class PlayerInfo:
         """
         Thread function to continuously monitor and update the player's rolls.
         """
-        last_known_rolls = 0  # Inizializza a 0
+        last_known_rolls = 50  # Start with 50 to force initial roll attempt
         last_known_roll_capacity = 50  # Inizializza a 50
+        self.set_rolls(last_known_rolls) # Initialize immediately so we aren't stuck on None
         while True:
             if self.in_home_status:
                 x_percent, y_percent, right_percent, bottom_percent = (
@@ -94,7 +96,7 @@ class PlayerInfo:
                     94.5,
                 )
                 process_settings = {
-                    "threshold_value": 100,
+                    "threshold_value": 75,
                     "invert": True,
                     "scale_factor": 3,
                 }
@@ -152,7 +154,7 @@ class PlayerInfo:
                     r"--psm 7 --oem 3 -c tessedit_char_whitelist=x0123456789"
                 )
                 mp_process_settings = {
-                    "threshold_value": None,
+                    "threshold_value": 75,
                     "invert": False,
                     "scale_factor": 3,
                 }
@@ -213,20 +215,47 @@ class PlayerInfo:
             self.current_path, "images", "in-home-icon.png"
         )
         in_home_image = shared_state.load_image(in_home_image_path)
-        logger.debug(f"[PLAYER-INFO] In-Home icon loaded: {in_home_image.shape if in_home_image is not None else 'None'}")
         
-        # WORKAROUND: Il template matching non funziona con molti thread contemporanei
-        # Aspettiamo che in_home_status venga impostato a True da main.py (quando si preme Page Up)
-        # poi manteniamo True senza ulteriori controlli
-        logger.debug("[PLAYER-INFO] Waiting for in_home_status to be set to True...")
-        with self.in_home_condition:
-            self.in_home_condition.wait_for(lambda: self.in_home_status)
+        # Load GO button as fallback/primary indicator per user request
+        go_image_path = os.path.join(
+            self.current_path, "images", "go.png"
+        )
+        go_image = shared_state.load_image(go_image_path)
         
-        logger.debug("[PLAYER-INFO] in_home_status is now True. Maintaining True state.")
+        logger.debug(f"[PLAYER-INFO] In-Home icon loaded. GO icon loaded.")
         
-        # Una volta True, manteniamo True senza fare altri controlli
+        # Monitoraggio reale dello stato In-Home
         while True:
-            sleep(5)  # Sleep lungo, non facciamo più controlli
+            # Check if in-home icon OR GO button is present
+            # User requested to use GO button as proof of being in home
+            is_home = False
+            if ocr_utils.find(go_image):
+                 is_home = True
+                 # logger.debug("[PLAYER-INFO] GO Button detected -> In Home")
+            elif ocr_utils.find(in_home_image):
+                 is_home = True
+                 # logger.debug("[PLAYER-INFO] Home Icon detected -> In Home")
+
+            if is_home:
+                if not self.in_home_status:
+                    logger.debug(f"[PLAYER-INFO] Home/GO detected. Setting in_home_status = True")
+                    self.set_in_home(True)
+                # Reset counter on success
+                if hasattr(self, '_fail_count'): self._fail_count = 0
+            else:
+                if self.in_home_status:
+                    logger.debug("[PLAYER-INFO] Home/GO lost. Setting in_home_status = False")
+                    self.set_in_home(False)
+                
+                # Debug Panic: Capture screenshot if finding fails repeatedly for a LONG time
+                if not hasattr(self, '_fail_count'):
+                    self._fail_count = 0
+                self._fail_count += 1
+                if self._fail_count % 60 == 0: # Every 60 seconds (approx) - Reduced sensitivity
+                    logger.warning("[PLAYER-INFO] In-Home/GO icon NOT found for 60s. Saving debug screenshot...")
+                    ocr_utils.screenshot("debug_home_fail.png")
+            
+            sleep(1) # Controlla ogni secondo
 
     def set_money(self, money):
         """

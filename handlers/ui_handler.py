@@ -42,5 +42,9 @@ class UIHandler:
                             click()
                         self.last_clicked_image = image_path
                         shared_state.moveto_center()
+                        # Signal that a popup was handled
+                        with shared_state.ui_condition:
+                            shared_state.popup_handled = True
+                            shared_state.ui_condition.notify_all() 
                         break
             sleep(0.5)

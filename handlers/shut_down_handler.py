@@ -20,7 +20,7 @@ class ShutDownHandler:
         logger.debug("[SD] Received notification! Starting...")
         while shared_state.shut_down_handler_running:
             for path in sd_image_paths:
-                sd_image = shared_state.load_image(path=path)
+                """ sd_image = shared_state.load_image(path=path)
                 point = ocr_utils.find(sd_image)
                 if point is not None:
                     print(
@@ -31,6 +31,6 @@ class ShutDownHandler:
                         click()
                     sleep(0.2)
                     shared_state.moveto_center()
-                    break
+                    break """
                 sleep(1)
         print("[SD] Exiting...")

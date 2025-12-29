@@ -53,7 +53,7 @@ class BuildingMonitor:
             bool: True if building should start, False otherwise
         """
         # Inizia il build quando non ci sono più tiri disponibili E c'è abbastanza denaro
-        return rolls == 0 and money >= self.minimum_money_to_build
+        return rolls < 1 and money >= self.minimum_money_to_build
 
     def run(self, ar_handler_instance):
         """
