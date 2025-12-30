@@ -25,5 +25,18 @@ def log_info(message):
     logger.log(INFO_LEVEL, message)
 
 
-def log_debug(message):
     logger.log(DEBUG_LEVEL, message)
+
+class SharedStateLogHandler(logging.Handler):
+    def emit(self, record):
+        from shared_state import shared_state
+        log_entry = self.format(record)
+        shared_state.recent_logs.append(log_entry)
+        # Keep only last 5 logs
+        if len(shared_state.recent_logs) > 5:
+            shared_state.recent_logs.pop(0)
+
+# Add shared state handler
+shared_state_handler = SharedStateLogHandler()
+shared_state_handler.setFormatter(formatter)
+logger.addHandler(shared_state_handler)

@@ -100,15 +100,19 @@ class PlayerInfo:
                     "invert": True,
                     "scale_factor": 3,
                 }
+                # Rolls Text (Updated via Region Selector)
+                # Region Selector gave (Left, Top, Width, Height)
+                # ocr_to_str expects (Left, Top, Right, Bottom)
+                # L=39.67, T=90.71, W=19.75, H=4.55
                 rolls_text = ocr_utils.ocr_to_str(
-                    x_percent,
-                    y_percent,
-                    right_percent,
-                    bottom_percent,
-                    output_image_path="rolls-proc.png",
-                    process_settings=process_settings,
+                    39.67, 
+                    90.71, 
+                    39.67 + 19.75, 
+                    90.71 + 4.55,
                     ocr_settings=r'--psm 6 -c tessedit_char_whitelist="0123456789/"',
                 )
+
+                #logger.debug(f"[PLAYER-INFO] Raw rolls text: '{rolls_text}'")
 
                 rolls_text_e = re.sub(r"([^0-9/])", "", rolls_text)
                 rolls_parts = rolls_text_e.split("/")

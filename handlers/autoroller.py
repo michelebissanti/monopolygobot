@@ -1,10 +1,11 @@
 from utils.ocr_utils import OCRUtils
 from pyautogui import moveTo
-from pydirectinput import click
+from pydirectinput import click as pydirectinput_click
 from shared_state import shared_state
 import os
 from utils.logger import logger
 from time import sleep
+import random
 
 ocr_utils = OCRUtils()
 
@@ -18,6 +19,43 @@ class AutoRoller:
         autoroller_running = True
         consecutive_popups = 0
         home_wait_counter = 0
+        
+        # --- Startup Logic (User Request) ---
+        startup_attempts = 0
+        max_startup_attempts = 5
+        
+        while startup_attempts < max_startup_attempts:
+            startup_attempts += 1
+            logger.debug(f"[AUTOROLL] Startup check {startup_attempts}/{max_startup_attempts}...")
+
+            # Check for popups first
+            popup_detected_startup = False
+            with shared_state.ui_condition:
+                if shared_state.popup_handled:
+                    popup_detected_startup = True
+                    shared_state.popup_handled = False
+            
+            if popup_detected_startup:
+                logger.info("[AUTOROLL] Popup detected during startup. Proceeding to main loop.")
+                break
+
+            # Check for GO button
+            if ocr_utils.find(go_image) is not None:
+                logger.debug("[AUTOROLL] GO button found during startup. Proceeding to main loop.")
+                break
+            
+            if startup_attempts == max_startup_attempts:
+                logger.warning("[AUTOROLL] Startup failed to find UI or GO button. Attempting BLIND CLICK.")
+                # Click randomly near center-ish or just a safe spot to potentially close a menu
+                # Using window center
+                with shared_state.moveTo_lock:
+                    center_x, center_y = shared_state.window_x + shared_state.window_center_x, shared_state.window_y + shared_state.window_center_y
+                    moveTo(center_x, center_y)
+                    pydirectinput_click()
+                    sleep(1)
+            else:
+                sleep(1)
+        # ------------------------------------
         
         while autoroller_running:  # While autoroller is running
             with shared_state.autoroller_running_condition:
@@ -35,9 +73,9 @@ class AutoRoller:
             
             if popup_detected:
                 consecutive_popups += 1
-                logger.debug(f"[AUTOROLL] Popup detected ({consecutive_popups}/3).")
-                if consecutive_popups >= 3:
-                    logger.info("[AUTOROLL] 3 consecutive popups detected. Assuming NO DICE.")
+                logger.debug(f"[AUTOROLL] Popup detected ({consecutive_popups}/10).")
+                if consecutive_popups >= 10:
+                    logger.info("[AUTOROLL] 10 consecutive popups detected. Assuming NO DICE.")
                     with shared_state.rolls_condition:
                         shared_state.rolls = 0
                         shared_state.rolls_condition.notify_all()
@@ -56,7 +94,13 @@ class AutoRoller:
                 
                 # Clicca e tieni premuto (Long Press) per attivare Auto-Roll
                 with shared_state.moveTo_lock:
-                    moveTo(point[0], point[1])
+                    # randomize click point slightly
+                    offset_x = random.randint(-5, 5)
+                    offset_y = random.randint(-5, 5)
+                    click_x = point[0] + offset_x
+                    click_y = point[1] + offset_y
+                    
+                    moveTo(click_x, click_y)
                     sleep(0.3)
                     import pydirectinput
                     pydirectinput.mouseDown()
@@ -85,8 +129,8 @@ class AutoRoller:
                      shared_state.popup_handled = False
                      logger.debug(f"[AUTOROLL] Popup detected after click ({consecutive_popups}/3).")
             
-            if consecutive_popups >= 3:
-                logger.info("[AUTOROLL] 3 consecutive popups detected. Assuming NO DICE.")
+            if consecutive_popups >= 10:
+                logger.info("[AUTOROLL] 10 consecutive popups detected. Assuming NO DICE.")
                 with shared_state.rolls_condition:
                     shared_state.rolls = 0
                     shared_state.rolls_condition.notify_all()

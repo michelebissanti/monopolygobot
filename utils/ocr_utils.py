@@ -1,9 +1,12 @@
-from PIL import ImageGrab
+from mss import mss
+from mss.tools import to_png
 import pyscreeze
 import cv2
 import numpy as np
 from pytesseract import pytesseract
 from shared_state import shared_state
+import pyautogui
+import time
 
 pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
@@ -35,50 +38,199 @@ class OCRUtils:
         self.window_coords = shared_state.window_coords
         self.window_size = self.window
 
-    def find(self, template: np.ndarray, bbox=None) -> pyscreeze.Point | None:
+    def find_template(self, template: np.ndarray, bbox=None, threshold=0.50) -> pyscreeze.Point | None:
         """
-        Find a template image within the specified region of the screen.
-
-        Args:
-            template (np.ndarray): The template image to search for.
-            bbox (tuple, optional): The region of the screen to search within (left, top, right, bottom).
-
-        Returns:
-            pyscreeze.Point | None: The coordinates of the found match center in absolute screen coordinates, or None if not found.
+        Robust Template Matching with Multi-Scale support.
+        This allows finding UI elements even if the resolution differs slightly.
         """
         try:
             if bbox is None:
                 bbox = self.window_coords
-            screenshot = ImageGrab.grab(
-                bbox=bbox
-            )  # Capture a screenshot of the specified region
-            screenshot_cv = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-
-            res = cv2.matchTemplate(screenshot_cv, template, cv2.TM_CCOEFF_NORMED)
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-            # from utils.logger import logger
-            # logger.debug(f"[OCR] Match confidence: {max_val:.2f}") 
             
-            threshold = 0.60  # Aggressively lowered to 0.60
-            loc = np.where(res >= threshold)
+            with mss() as sct:
+                monitor = {
+                    "top": bbox[1],
+                    "left": bbox[0],
+                    "width": bbox[2] - bbox[0],
+                    "height": bbox[3] - bbox[1]
+                }
+                sct_img = sct.grab(monitor)
+                screenshot_cv = cv2.cvtColor(np.array(sct_img), cv2.COLOR_BGRA2BGR)
 
-            if loc[0].size == 0:
+            # --- Multi-Scale Logic ---
+            best_match_val = -1
+            best_match_loc = None
+            best_scale = 1.0
+            
+            # Helper to get width/height
+            t_h, t_w = template.shape[:2]
+
+            # Define scales to search: 80% to 120% in 10 steps (Focus on minor variations first for speed)
+            # If "different resolutions" implies big changes, we can widen to 0.5 - 1.5
+            scales = np.linspace(0.8, 1.2, 11) 
+
+            # Also check exact scale 1.0 explicitly just in case linspace misses it slightly
+            if 1.0 not in scales:
+                scales = np.append(scales, 1.0)
+            
+            for scale in scales:
+                # Resize template
+                width = int(t_w * scale)
+                height = int(t_h * scale)
+                
+                # Skip if template becomes larger than screenshot
+                if width > screenshot_cv.shape[1] or height > screenshot_cv.shape[0]:
+                    continue
+                    
+                resized_template = cv2.resize(template, (width, height))
+                
+                res = cv2.matchTemplate(screenshot_cv, resized_template, cv2.TM_CCOEFF_NORMED)
+                min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+                
+                if max_val > best_match_val:
+                    best_match_val = max_val
+                    best_match_loc = max_loc
+                    best_scale = scale
+            
+            # Check if our best match exceeds threshold
+            if best_match_val >= threshold:
+                x, y = best_match_loc
+                # Calculate center based on the SCALED template size
+                center_x = x + int(t_w * best_scale / 2)
+                center_y = y + int(t_h * best_scale / 2)
+                
+                match_center_absolute = (
+                    int(center_x + bbox[0]),
+                    int(center_y + bbox[1])
+                )
+                
+                # Debug Overlay
+                w_final = int(t_w * best_scale)
+                h_final = int(t_h * best_scale)
+                top_left_abs = (int(x + bbox[0]), int(y + bbox[1]))
+                
+                shared_state.debug_overlays.append(
+                    ((top_left_abs[0], top_left_abs[1], w_final, h_final), f"Match ({int(best_match_val*100)}%) S:{best_scale:.2f}", time.time())
+                )
+                
+                return match_center_absolute
+
+            return None
+         
+        except Exception as e:
+            print(f"[OCR] find_template failed: {e}")
+            return None
+
+
+    def find_sift(self, template: np.ndarray, bbox=None, min_match_count=10) -> pyscreeze.Point | None:
+        """
+        Find a template image using SIFT Feature Matching.
+        Robust to scale, rotation, and brightness changes.
+        """
+        try:
+            if bbox is None:
+                bbox = self.window_coords
+            
+            with mss() as sct:
+                monitor = {
+                    "top": bbox[1],
+                    "left": bbox[0],
+                    "width": bbox[2] - bbox[0],
+                    "height": bbox[3] - bbox[1]
+                }
+                sct_img = sct.grab(monitor)
+                screenshot_cv = cv2.cvtColor(np.array(sct_img), cv2.COLOR_BGRA2BGR)
+
+            # Initialize SIFT detector
+            sift = cv2.SIFT_create()
+
+            # Find the keypoints and descriptors with SIFT
+            kp1, des1 = sift.detectAndCompute(template, None)
+            kp2, des2 = sift.detectAndCompute(screenshot_cv, None)
+
+            # FLANN parameters
+            FLANN_INDEX_KDTREE = 1
+            index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+            search_params = dict(checks=50)
+
+            flann = cv2.FlannBasedMatcher(index_params, search_params)
+            
+            # Need check if descriptors are None (e.g. blank images)
+            if des1 is None or des2 is None or len(des1) < 2 or len(des2) < 2:
                 return None
 
-            # Get the coordinates of the match relative to the bbox
-            y, x = loc[0][0], loc[1][0]
-            match_center_relative = (x + template.shape[1] // 2, y + template.shape[0] // 2)
-            
-            # Convert to absolute screen coordinates by adding bbox offset
-            match_center_absolute = (
-                match_center_relative[0] + bbox[0],
-                match_center_relative[1] + bbox[1]
-            )
+            matches = flann.knnMatch(des1, des2, k=2)
 
-            return match_center_absolute
-        except OSError:
-            print("[OCR] Screen grab failed")
+            # Store all the good matches as per Lowe's ratio test.
+            good = []
+            for m, n in matches:
+                if m.distance < 0.7 * n.distance:
+                    good.append(m)
+
+            if len(good) > min_match_count:
+                src_pts = np.float32([kp1[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
+                dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
+
+                M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
+                
+                if M is not None:
+                    h, w, d = template.shape
+                    pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]]).reshape(-1, 1, 2)
+                    dst = cv2.perspectiveTransform(pts, M)
+
+                    # Calculate center of the projected quad
+                    # Simple average of corners
+                    center_x = np.mean(dst[:, 0, 0])
+                    center_y = np.mean(dst[:, 0, 1])
+                    
+                    match_center_absolute = (
+                        int(center_x) + bbox[0],
+                        int(center_y) + bbox[1]
+                    )
+                    # logger.debug(f"[OCR-SIFT] Found match with {len(good)} good matches.")
+                    # Debug Overlay (SIFT uses center point usually)
+                    shared_state.debug_overlays.append(
+                        (match_center_absolute, f"SIFT ({len(good)})", time.time())
+                    )
+                    return match_center_absolute
+            
+            # logger.debug(f"[OCR-SIFT] Not enough matches are found - {len(good)}/{min_match_count}")
             return None
+
+        except Exception as e:
+            print(f"[OCR-SIFT] Error: {e}")
+            return None
+
+    def find(self, template: np.ndarray, bbox=None, threshold=0.65, min_match_count=8) -> pyscreeze.Point | None:
+        # Priority: SIFT > Template Matching
+        
+        # 1. Try SIFT (Feature Matching)
+        match = self.find_sift(template, bbox, min_match_count=min_match_count)
+        
+        # 2. Fallback
+        if not match:
+             match = self.find_template(template, bbox, threshold)
+             
+        # Safety Check: PyAutoGUI Fail-Safe trigger (corners)
+        if match:
+            screen_w, screen_h = pyautogui.size()
+            x, y = match
+            
+            # Reset triggers: (0,0), (w,0), (0,h), (w,h)
+            # We add a margin of 5 pixels to be safe
+            margin = 5
+            # Fix: Ensure we only check for (0,0) of the PRIMARY monitor (where failsafe usually is)
+            # and ignore negative coordinates which are valid on secondary monitors.
+            in_left = 0 <= x < margin
+            in_right = (screen_w - margin) < x <= screen_w
+            in_top = 0 <= y < margin
+            in_bottom = (screen_h - margin) < y <= screen_h
+            
+            if (in_left and in_top) or (in_right and in_top) or (in_left and in_bottom) or (in_right and in_bottom):
+                 print(f"[OCR] Ignored match at unsafe coordinates ({x}, {y})")
+                 return None
+                 
+        return match
 
     def preprocess_image(
         self,
@@ -155,22 +307,47 @@ class OCRUtils:
             str: The recognized text within the specified region.
         """
         left = int(
-            self.window_coords[0] + (self.window_coords[2] * (region_x_percent / 100))
+            self.window_x + (self.window_width * (region_x_percent / 100))
         )
         upper = int(
-            self.window_coords[1] + (self.window_coords[3] * (region_y_percent / 100))
+            self.window_y + (self.window_height * (region_y_percent / 100))
         )
         right = int(
-            self.window_coords[0]
-            + (self.window_coords[2] * (region_right_percent / 100))
+            self.window_x
+            + (self.window_width * (region_right_percent / 100))
         )
         bottom = int(
-            self.window_coords[1]
-            + (self.window_coords[3] * (region_bottom_percent / 100))
+            self.window_y
+            + (self.window_height * (region_bottom_percent / 100))
         )
 
-        screenshot = ImageGrab.grab(bbox=(left, upper, right, bottom))
-        screenshot_np = np.array(screenshot)
+        width = right - left
+        height = bottom - upper
+
+        # Debug Overlay for OCR Region
+        try:
+             # Store as (left, top, w, h)
+             # Adjust relative for visualizer if needed, but visualizer expects abs coords
+             shared_state.debug_overlays.append(
+                ((left, upper, width, height), "OCR Region", time.time())
+             )
+        except Exception:
+             pass
+
+        with mss() as sct:
+            monitor = {
+                "top": upper,
+                "left": left,
+                "width": width,
+                "height": height
+            }
+            sct_img = sct.grab(monitor)
+            # Convert BGRA to BGR to be consistent with previous RGB->BGR assumptions (or just BGR)
+            screenshot_np = cv2.cvtColor(np.array(sct_img), cv2.COLOR_BGRA2BGR)
+            
+            # Preprocessing: Convert to Grayscale (Helps with white text/contrast)
+            screenshot_gray = cv2.cvtColor(screenshot_np, cv2.COLOR_BGR2GRAY)
+
         # screenshot_cropped = screenshot_np[upper:bottom, left:right]
         if process_settings:
             screenshot_size = (
@@ -184,7 +361,8 @@ class OCRUtils:
                 invert=process_settings["invert"],
             )
         else:
-            screenshot_proc = screenshot_np
+            # Default to grayscale if no settings provided (Better for simple OCR)
+            screenshot_proc = screenshot_gray
         if output_image_path:
             cv2.imwrite(output_image_path, screenshot_proc)
         if ocr_settings:
@@ -201,5 +379,11 @@ class OCRUtils:
         Args:
             name (str): The name and path of the output screenshot file.
         """
-        screenshot = ImageGrab.grab(bbox=self.window_coords)
-        screenshot.save(name)
+        with mss() as sct:
+            monitor = {
+                "top": self.window_coords[1],
+                "left": self.window_coords[0],
+                "width": self.window_coords[2] - self.window_coords[0],
+                "height": self.window_coords[3] - self.window_coords[1]
+            }
+            to_png(sct.grab(monitor).rgb, sct.grab(monitor).size, output=name)

@@ -42,7 +42,7 @@ class DestructionHandler:
                 return False
             
             # Cerca il mirino sullo schermo
-            location = ocr_utils.find(target_image)
+            location = ocr_utils.find(target_image, threshold=0.5)
             
             if location:
                 print(f"[DESTRUCTION] Target found. Clicking...")

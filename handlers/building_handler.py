@@ -105,10 +105,10 @@ class BuildingHandler:
         self.buildings = [
             {
                 "name": "building1",
-                "x_percent": 37,
-                "y_percent": 86,
-                "right_percent": 40.5,
-                "bottom_percent": 91,
+                "x_percent": 8.23,
+                "y_percent": 86.53,
+                "right_percent": 18.65,
+                "bottom_percent": 89.32,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -120,10 +120,10 @@ class BuildingHandler:
             },
             {
                 "name": "building2",
-                "x_percent": 42.5,
-                "y_percent": 86,
-                "right_percent": 46,
-                "bottom_percent": 91,
+                "x_percent": 28.15,
+                "y_percent": 86.63,
+                "right_percent": 38.39,
+                "bottom_percent": 89.13,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -135,10 +135,10 @@ class BuildingHandler:
             },
             {
                 "name": "building3",
-                "x_percent": 48.5,
-                "y_percent": 86,
-                "right_percent": 52,
-                "bottom_percent": 91,
+                "x_percent": 47.53,
+                "y_percent": 86.53,
+                "right_percent": 58.13,
+                "bottom_percent": 89.22,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -150,10 +150,10 @@ class BuildingHandler:
             },
             {
                 "name": "building4",
-                "x_percent": 54.5,
-                "y_percent": 86,
-                "right_percent": 58,
-                "bottom_percent": 91,
+                "x_percent": 67.64,
+                "y_percent": 86.53,
+                "right_percent": 77.51,
+                "bottom_percent": 89.12,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -165,10 +165,10 @@ class BuildingHandler:
             },
             {
                 "name": "building5",
-                "x_percent": 60.5,
-                "y_percent": 86,
-                "right_percent": 64,
-                "bottom_percent": 91,
+                "x_percent": 87.20,
+                "y_percent": 86.63,
+                "right_percent": 97.80,
+                "bottom_percent": 89.22,
                 "upgrade_level": 0,
                 "upgrade0": 0,
                 "upgrade1": 0,
@@ -516,6 +516,7 @@ class BuildingHandler:
                 
             # Iterate through buildings
             actions_taken_in_this_cycle = 0
+            affordable_structure_found = False
             
             for building_info in self.buildings:
                 # Check popup limit immediately
@@ -557,13 +558,15 @@ class BuildingHandler:
                     if self.current_money >= cost:
                         logger.debug(f"[BUILDER] Cost {cost} <= Money {self.current_money}. Clicking {building_name}...")
                         should_click = True
+                        affordable_structure_found = True
                     else:
                         logger.debug(f"[BUILDER] Cost {cost} > Money {self.current_money}. Skipping {building_name}.")
                         should_click = False
                 else:
-                    # Invalid/Unknown cost -> Blind Click
+                    # Invalid/Unknown cost -> Blind Click (Fallback if OCR fails)
                     logger.debug(f"[BUILDER] Cost unknown for {building_name}. Blind clicking...")
                     should_click = True
+                    affordable_structure_found = True # Assume potentially affordable
                 
                 if should_click:
                     with shared_state.moveTo_lock:
@@ -588,16 +591,14 @@ class BuildingHandler:
                         
                     # Update money after action
                     with shared_state.money_condition:
-                        shared_state.money_condition.wait(timeout=0.5)
-                        self.current_money = shared_state.money if shared_state.money is not None else self.current_money
+                         shared_state.money_condition.wait(timeout=0.5)
+                         self.current_money = shared_state.money if shared_state.money is not None else self.current_money
                 else:
                     sleep(0.1)
 
-            # If we cycled through all buildings and didn't click anything (because we knew we had no money), exit
-            if actions_taken_in_this_cycle == 0 and consecutive_popups < 3:
-                # Double check money logic? 
-                # If we skipped everything because Money < Cost, we are done.
-                logger.debug("[BUILDER] No actions taken in this cycle (Money insufficient for known costs). Exiting...")
+            # Optimization: If we checked all buildings and none were affordable, EXIT.
+            if not affordable_structure_found and actions_taken_in_this_cycle == 0:
+                logger.debug("[BUILDER] No affordable buildings found (Money < All Costs). Exiting...")
                 break
                 
             sleep(1) 

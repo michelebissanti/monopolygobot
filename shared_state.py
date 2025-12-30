@@ -110,6 +110,10 @@ class SharedState:
         self.multiplier_handler_event = Event()
         self.builder_event = Event()
         self.idle_event = Event()
+        
+        # Debug / Visualizer
+        self.debug_overlays = [] # List of tuples: (rect/point, label, timestamp)
+        self.recent_logs = [] # List of strings
 
     def load_image(self, path: str):
         return image_cache.load_image(path)

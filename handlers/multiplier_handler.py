@@ -3,6 +3,7 @@ from pyautogui import moveTo
 from pydirectinput import click
 from utils.logger import logger
 import time
+from time import sleep
 
 
 class MultiplierHandler:
@@ -35,23 +36,52 @@ class MultiplierHandler:
             logger.debug("[MP-H] Not on home screen. Waiting...")
             shared_state.in_home_condition.wait_for(lambda: shared_state.in_home_status)
         logger.debug("[MP-H] On home screen. Starting...")
+        
+        # Load max.png
+        import os
+        from utils.ocr_utils import OCRUtils
+        current_path = shared_state.current_path
+        max_image_path = os.path.join(current_path, "images", "max.png")
+        max_image = shared_state.load_image(max_image_path)
+        ocr_utils = OCRUtils()
+        
         start_time = time.time()
-        while self.multiplier != self.correct_multiplier:
+        
+        # Loop until MAX image is found
+        # Loop until MAX image is found
+        while True:
+            # Check if MAX is visible using OCR
+            # Coordinates from user: (61.06, 57.29, 12.98, 3.99)
+            # ocr_to_str expects: left, top, right, bottom
+            text = ocr_utils.ocr_to_str(
+                61.06,
+                57.29,
+                61.06 + 12.98,
+                57.29 + 3.99,
+                ocr_settings=r'--psm 6' # Simple single line mode
+            )
+            
+            logger.debug(f"[MP-H] OCR Text: '{text}'")
+            
+            if "MAX" in text.upper():
+                 logger.debug("[MP-H] MAX multiplier found! Exiting...")
+                 break
+
             shared_state.multiplier_handler_event.set()
             with shared_state.moveTo_lock:
                 moveTo(self.center_x, self.center_y)
-                click()
-            with shared_state.multiplier_condition:
-                shared_state.multiplier_condition.wait()
-                self.multiplier = shared_state.multiplier
+                import pydirectinput
+                pydirectinput.click() # Using pydirectinput for consistency
+                
+            # Wait a bit for UI to update
+            sleep(0.5)
+
             elapsed_time = time.time() - start_time
-            if self.multiplier == self.correct_multiplier:
-                logger.debug("[MP-H] Multiplier correct. Exiting...")
-                break
             if elapsed_time >= self.timeout:
-                logger.debug("[MP-H] Timeout reached. Exiting...")
+                logger.debug("[MP-H] Timeout reached (MAX not found). Exiting...")
                 break
-            logger.debug("[MP-H] Multiplier updated. Checking...")
+            logger.debug("[MP-H] Multiplier clicked. Checking for MAX...")
+            
         shared_state.moveto_center()
         shared_state.multiplier_handler_event.clear()
         with shared_state.multiplier_handler_finished_condition:

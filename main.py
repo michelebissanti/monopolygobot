@@ -105,6 +105,13 @@ def on_key_press(key):
             print(e)
             logger.error(e)
             exit()
+    elif key == keyboard.Key.page_down:
+        print("[STATUS] Quick Exit triggered!")
+        logger.info("[STATUS] Quick Exit triggered!")
+        # Force exit
+        import os
+        os._exit(0)
+
     elif key == keyboard.Key.f12:
         print("[STATUS] Exiting...")
         logger.info("[STATUS] Exiting...")
@@ -124,20 +131,27 @@ init_cache()
 logger.debug("Cache initialized.")
 
 
-def main():
+from utils.visualizer import Visualizer
+
+if __name__ == "__main__":
+    logger.info("Starting...")
+    visualizer = Visualizer()
+
+    # Start listener in a separate thread so visualizer can run in main thread
+    # listener.start() is enough, we don't need join() if visualizer has its own loop
+    listener = keyboard.Listener(on_press=on_key_press)
+    listener.start()
+
     state_handler.start_player_info()
-    # Aspetta che i thread PlayerInfo leggano i valori iniziali
+    # Wait for PlayerInfo threads to initialize
     logger.info("Waiting for PlayerInfo threads to initialize...")
     sleep(5)
     logger.info("PlayerInfo initialization complete")
     
     state_handler.start_set_console_title()
 
-    with keyboard.Listener(on_press=on_key_press) as listener:
-        listener.join()
-
-
-if __name__ == "__main__":
-    logger.info("Starting...")
-
-    main()
+    # Run visualizer (blocking until closed)
+    visualizer.run()
+    
+    # Cleanup
+    shared_state.save_cache("image_cache.pkl")
