@@ -10,6 +10,8 @@ from handlers import building_handler
 from shared_state import shared_state
 from time import sleep
 from utils.logger import logger
+from utils.ocr_utils import OCRUtils
+import re
 
 
 class BuildingMonitor:
@@ -17,6 +19,7 @@ class BuildingMonitor:
         self.builder_running_condition = shared_state.builder_running_condition
         self.builder_running = shared_state.builder_running
         self.minimum_money_to_build = 1000  # Denaro minimo necessario per avviare il build
+        self.ocr_utils = OCRUtils()
 
     def set_builder_running(self, value):
         """
@@ -54,6 +57,39 @@ class BuildingMonitor:
         """
         # Inizia il build quando non ci sono più tiri disponibili E c'è abbastanza denaro
         return rolls < 1 and money >= self.minimum_money_to_build
+
+    def check_wait_time(self):
+        """
+        Checks the screen for the time remaining until more rolls are available.
+        Returns:
+            str | None: The time string (e.g. "57:52") or None if not found.
+        """
+        # Region provided by user: Left(%): 36.56, Top(%): 94.82, Width(%): 27.24, Height(%): 2.19
+        x = 36.56
+        y = 94.82
+        w = 27.24
+        h = 2.19
+        right = x + w
+        bottom = y + h
+        
+        try:
+             # Expanded whitelist to include dot and colon, and potentially space
+             # psm 7 corresponds to "Treat the image as a single text line."
+             text = self.ocr_utils.ocr_to_str(
+                 x, y, right, bottom, 
+                 ocr_settings="--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789:. "
+             )
+             logger.debug(f"[BUILD-M] Raw Wait Time OCR: '{text}'")
+             
+             # Regex for time format XX:XX or XX.XX (e.g. 52:10, 01:05, 57.52)
+             match = re.search(r"(\d{1,2}[:.]\d{2})", text)
+             if match:
+                 time_val = match.group(1).replace(".", ":") # Standardize to colon
+                 return time_val
+        except Exception as e:
+            logger.error(f"[BUILD-M] Failed to check wait time: {e}")
+            
+        return None
 
     def run(self, ar_handler_instance):
         """
@@ -116,6 +152,7 @@ class BuildingMonitor:
                     logger.debug(
                         f"[BUILD-M] No more rolls available (rolls={rolls}) and enough money ({money}). Starting builder..."
                     )
+                    shared_state.bot_status = "BUILDING"
                     self.set_builder_running(True)
                     if shared_state.autoroller_running:
                         logger.debug("[BUILD-M] Stopping autoroller...")
@@ -189,13 +226,55 @@ class BuildingMonitor:
                                     lambda: not shared_state.disable_autoroller_running
                                 )
                     self.set_builder_running(False)  # Set builder_running to False
-                    logger.debug("[BUILD-M] Build cycle completed. Waiting for next cycle...")
+                    logger.debug("[BUILD-M] Build cycle completed. Entering Wait Mode until rolls increase...")
+                    
+                    # Force a wait loop until rolls are replenished
+                    while True:
+                        with shared_state.rolls_condition:
+                            if shared_state.rolls is None:
+                                shared_state.rolls_condition.wait(timeout=2)
+                            else:
+                                shared_state.rolls_condition.wait(timeout=0.5)
+                            current_rolls = shared_state.rolls
+                            
+                        # If we have enough rolls (e.g. >= 5 for safety, or even >=1), we assume we can play again
+                        # AutorollMonitor will pick up when rolls >= 1 usually. 
+                        # We break here to let the main loop decide.
+                        if current_rolls is not None and current_rolls >= 5: 
+                             logger.debug(f"[BUILD-M] Rolls replenished ({current_rolls}). Exiting Wait Mode.")
+                             break
+                             
+                        # Update status
+                        wait_time_s = 2
+                        time_str = self.check_wait_time()
+                        if time_str:
+                             shared_state.bot_status = f"PAUSED (WAITING {time_str})"
+                             wait_time_s = 60 # Check again in 1 minute
+                             logger.debug(f"[BUILD-M] Waiting for rolls... ({time_str})")
+                        else:
+                             shared_state.bot_status = "PAUSED (WAITING FOR RESOURCES)"
+                             logger.debug(f"[BUILD-M] Waiting for rolls... (rolls={current_rolls})")
+                        
+                        sleep(wait_time_s)
                 elif (
                     not shared_state.builder_running
                     and not self.should_start_building(rolls, money)
                 ):  # Conditions not met, wait a bit and check again
-                    logger.debug(f"[BUILD-M] Conditions not met (rolls={rolls}, money={money}). Waiting...")
-                    sleep(2)  # Controlla ogni 2 secondi invece di bloccare
+                    wait_time_s = 2
+                    if rolls < 5:
+                        # Attempt to read the wait time from screen
+                        time_str = self.check_wait_time()
+                        if time_str:
+                             shared_state.bot_status = f"PAUSED (WAITING {time_str})"
+                             wait_time_s = 60 # Check again in 1 minute to update status
+                             logger.debug(f"[BUILD-M] Waiting for rolls. Time remaining: {time_str}")
+                        else:
+                             shared_state.bot_status = "PAUSED (WAITING FOR RESOURCES)"
+                             logger.debug(f"[BUILD-M] Conditions not met (rolls={rolls}, money={money}). Waiting...")
+                    else:
+                        logger.debug(f"[BUILD-M] Conditions not met (rolls={rolls}, money={money}). Waiting...")
+                        
+                    sleep(wait_time_s)  
                 else:  # Builder is running, wait for it to finish
                     logger.debug("[BUILD-M] Builder is running, waiting...")
                     sleep(2)

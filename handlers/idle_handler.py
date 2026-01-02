@@ -112,7 +112,7 @@ class IdleHandler:
                         click()
                     sleep(2)
                 # Look for invite button
-                invite_button = ocr_utils.find(self.invite_button)
+                invite_button = ocr_utils.find(self.invite_button, label_name="Invite Button")
                 while (
                     not invite_button
                 ):  # While the invite button isn't present, move to friends button and click
@@ -130,7 +130,7 @@ class IdleHandler:
                         sleep(1)
                         click()
                     sleep(2)
-                in_menu = ocr_utils.find(self.share_button)  # Look for share button
+                in_menu = ocr_utils.find(self.share_button, label_name="Share Button")  # Look for share button
                 while (
                     not in_menu
                 ):  # While the share button isn't present, move to invite button and click

@@ -1,257 +1,352 @@
-2025-12-30 18:46:40,130:DEBUG:utils.logger - Autoroller handler initialized
-2025-12-30 18:46:40,135:DEBUG:utils.logger - [CACHE] Loaded cache from image_cache.pkl.
-2025-12-30 18:46:40,135:DEBUG:utils.logger - Cache initialized.
-2025-12-30 18:46:40,136:INFO:utils.logger - Starting...
-2025-12-30 18:46:40,142:DEBUG:utils.logger - [STATE] PlayerInfo thread started successfully
-2025-12-30 18:46:40,142:DEBUG:utils.logger - [PLAYER-INFO] ========================================
-2025-12-30 18:46:40,142:INFO:utils.logger - Waiting for PlayerInfo threads to initialize...
-2025-12-30 18:46:40,142:DEBUG:utils.logger - [PLAYER-INFO] PlayerInfo STARTING all threads...
-2025-12-30 18:46:40,142:DEBUG:utils.logger - [PLAYER-INFO] ========================================
-2025-12-30 18:46:40,144:DEBUG:utils.logger - [PLAYER-INFO] Started thread: money
-2025-12-30 18:46:40,144:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
-2025-12-30 18:46:40,145:DEBUG:utils.logger - [PLAYER-INFO] Started thread: rolls
-2025-12-30 18:46:40,145:DEBUG:utils.logger - [PLAYER-INFO] Started thread: multiplier
-2025-12-30 18:46:40,147:DEBUG:utils.logger - [PLAYER-INFO] Started thread: rolling_status
-2025-12-30 18:46:40,147:DEBUG:utils.logger - [PLAYER-INFO] Started thread: in_home_status
-2025-12-30 18:46:40,147:DEBUG:utils.logger - [PLAYER-INFO] In-Home thread started. Window coords: (-779, 24, -232, 1026)
-2025-12-30 18:46:40,147:DEBUG:utils.logger - [PLAYER-INFO] All threads started successfully
-2025-12-30 18:46:40,147:DEBUG:utils.logger - [PLAYER-INFO] In-Home icon loaded. GO icon loaded.
-2025-12-30 18:46:45,144:INFO:utils.logger - PlayerInfo initialization complete
-2025-12-30 18:46:48,256:INFO:utils.logger - [STATUS] Starting all handlers...
-2025-12-30 18:46:48,256:DEBUG:utils.logger - [STATUS] Set in_home_status to True (assumed in home)
-2025-12-30 18:46:48,257:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
-2025-12-30 18:46:48,458:DEBUG:utils.logger - [autoroll_handler] autoroll_handler started. Notifying...
-2025-12-30 18:46:48,458:DEBUG:utils.logger - [STATE] Notifying autoroll handler thread...
-2025-12-30 18:46:48,658:DEBUG:utils.logger - [autoroll_handler] autoroll_handler notified.
-2025-12-30 18:46:48,859:DEBUG:utils.logger - [STATE] Autoroll handler thread notified.
-2025-12-30 18:46:48,859:DEBUG:utils.logger - [building_monitor] building_monitor started. Notifying...
-2025-12-30 18:46:48,860:DEBUG:utils.logger - [STATE] Notifying building monitor thread...
-2025-12-30 18:46:49,061:DEBUG:utils.logger - [building_monitor] building_monitor notified.
-2025-12-30 18:46:49,261:DEBUG:utils.logger - [STATE] Building monitor thread notified.
-2025-12-30 18:46:49,261:DEBUG:utils.logger - [bank_heist] bank_heist started. Notifying...
-2025-12-30 18:46:49,401:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 13/50
-2025-12-30 18:46:49,463:DEBUG:utils.logger - [bank_heist] bank_heist notified.
-2025-12-30 18:46:49,669:DEBUG:utils.logger - [shut_down] shut_down started. Notifying...
-2025-12-30 18:46:49,871:DEBUG:utils.logger - [shut_down] shut_down notified.
-2025-12-30 18:46:50,072:DEBUG:utils.logger - [ui] ui started. Notifying...
-2025-12-30 18:46:50,274:DEBUG:utils.logger - [ui] ui notified.
-2025-12-30 18:46:50,475:DEBUG:utils.logger - [multiplier_monitor] multiplier_monitor started. Notifying...
-2025-12-30 18:46:50,475:DEBUG:utils.logger - [STATE] Notifying multiplier monitor thread...
-2025-12-30 18:46:50,676:DEBUG:utils.logger - [multiplier_monitor] multiplier_monitor notified.
-2025-12-30 18:46:50,876:DEBUG:utils.logger - [STATE] Multiplier monitor thread notified.
-2025-12-30 18:46:50,876:DEBUG:utils.logger - [autoroll_monitor] autoroll_monitor started. Notifying...
-2025-12-30 18:46:50,878:DEBUG:utils.logger - [STATE] Notifying autoroll monitor thread...
-2025-12-30 18:46:51,078:DEBUG:utils.logger - [autoroll_monitor] autoroll_monitor notified.
-2025-12-30 18:46:51,279:DEBUG:utils.logger - [STATE] Autoroll monitor thread notified.
-2025-12-30 18:46:51,280:DEBUG:utils.logger - [idle] idle started. Notifying...
-2025-12-30 18:46:51,481:DEBUG:utils.logger - [idle] idle notified.
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [destruction] destruction started. Notifying...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [DESTRUCTION] Starting destruction handler...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [DESTRUCTION] Destruction handler is now active!
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [AR-H] Received notification! Starting...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [HEIST] Received notification! Starting...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [SD] Received notification! Starting...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [UI] Received notification! Starting...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [MP-M] Received notification! Starting...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [AR-M] Received notification! Starting...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [IDLE] Received notification! Starting...
-2025-12-30 18:46:51,682:DEBUG:utils.logger - [BUILD-M] ========================================
-2025-12-30 18:46:51,684:DEBUG:utils.logger - autoroller_running and disable_autoroller_running are False
-2025-12-30 18:46:51,685:DEBUG:utils.logger - [BUILD-M] Building Monitor STARTED
-2025-12-30 18:46:51,686:DEBUG:utils.logger - Updated autoroller_running to False. Notifying...
-2025-12-30 18:46:51,686:DEBUG:utils.logger - [BUILD-M] ========================================
-2025-12-30 18:46:51,687:DEBUG:utils.logger - Updated disable_autoroller_running to False. Notifying...
-2025-12-30 18:46:51,687:DEBUG:utils.logger - [BUILD-M] Minimum money required to build: 1000
-2025-12-30 18:46:51,687:DEBUG:utils.logger - [BUILD-M] Initial state: rolls=13, money=616749, in_home=True
-2025-12-30 18:46:51,883:DEBUG:utils.logger - [destruction] destruction notified.
-2025-12-30 18:46:52,347:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=13, money=616749). Waiting...
-2025-12-30 18:46:55,349:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=13, money=616749). Waiting...
-2025-12-30 18:46:58,350:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=13, money=616749). Waiting...
-2025-12-30 18:46:59,679:DEBUG:utils.logger - [AR-M] Rolls >= 1 (or None). Starting autoroller...
-2025-12-30 18:46:59,679:DEBUG:utils.logger - Updated autoroller_running to True. Notifying...
-2025-12-30 18:46:59,680:DEBUG:utils.logger - Autoroller thread started in start_autoroller
-2025-12-30 18:46:59,680:DEBUG:utils.logger - [AUTOROLL] Startup check 1/5...
-2025-12-30 18:46:59,776:DEBUG:utils.logger - [AUTOROLL] GO button found during startup. Proceeding to main loop.
-2025-12-30 18:46:59,776:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:46:59,860:DEBUG:utils.logger - [AUTOROLL] GO button found at (-505, 806). Executing Long Press...
-2025-12-30 18:47:00,871:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 8/50
-2025-12-30 18:47:01,332:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=13, money=629706). Waiting...
-2025-12-30 18:47:01,466:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 3/50
-2025-12-30 18:47:02,467:DEBUG:utils.logger - [AUTOROLL] Long Press executed.
-2025-12-30 18:47:03,772:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
-2025-12-30 18:47:04,225:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
-2025-12-30 18:47:04,334:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=3, money=702389). Waiting...
-2025-12-30 18:47:04,821:DEBUG:utils.logger - [AUTOROLL] Popup detected after click (1/3).
-2025-12-30 18:47:04,821:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:05,170:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
-2025-12-30 18:47:05,784:DEBUG:utils.logger - [HEIST] Active Check OCR: 'i a
+2026-01-02 14:00:19,798:DEBUG:utils.logger - Autoroller handler initialized
+2026-01-02 14:00:19,801:DEBUG:utils.logger - [CACHE] Loaded cache from image_cache.pkl.
+2026-01-02 14:00:19,802:DEBUG:utils.logger - Cache initialized.
+2026-01-02 14:00:19,802:INFO:utils.logger - Starting...
+2026-01-02 14:00:19,808:DEBUG:utils.logger - [STATE] PlayerInfo thread started successfully
+2026-01-02 14:00:19,809:INFO:utils.logger - Waiting for PlayerInfo threads to initialize...
+2026-01-02 14:00:19,809:DEBUG:utils.logger - [PLAYER-INFO] ========================================
+2026-01-02 14:00:19,809:DEBUG:utils.logger - [PLAYER-INFO] PlayerInfo STARTING all threads...
+2026-01-02 14:00:19,809:DEBUG:utils.logger - [PLAYER-INFO] ========================================
+2026-01-02 14:00:19,810:DEBUG:utils.logger - [PLAYER-INFO] Started thread: money
+2026-01-02 14:00:19,810:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 14:00:19,811:DEBUG:utils.logger - [PLAYER-INFO] Started thread: rolls
+2026-01-02 14:00:19,812:DEBUG:utils.logger - [PLAYER-INFO] Started thread: multiplier
+2026-01-02 14:00:19,813:DEBUG:utils.logger - [PLAYER-INFO] Started thread: rolling_status
+2026-01-02 14:00:19,813:DEBUG:utils.logger - [PLAYER-INFO] Started thread: in_home_status
+2026-01-02 14:00:19,813:DEBUG:utils.logger - [PLAYER-INFO] In-Home thread started. Window coords: (-1530, 16, -983, 1019)
+2026-01-02 14:00:19,813:DEBUG:utils.logger - [PLAYER-INFO] All threads started successfully
+2026-01-02 14:00:19,814:DEBUG:utils.logger - [PLAYER-INFO] In-Home icon loaded. GO icon loaded.
+2026-01-02 14:00:24,810:INFO:utils.logger - PlayerInfo initialization complete
+2026-01-02 14:00:26,041:INFO:utils.logger - [STATUS] Starting all handlers...
+2026-01-02 14:00:26,042:DEBUG:utils.logger - [STATUS] Set in_home_status to True (assumed in home)
+2026-01-02 14:00:26,042:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 14:00:26,243:DEBUG:utils.logger - [autoroll_handler] autoroll_handler started. Notifying...
+2026-01-02 14:00:26,244:DEBUG:utils.logger - [STATE] Notifying autoroll handler thread...
+2026-01-02 14:00:26,444:DEBUG:utils.logger - [autoroll_handler] autoroll_handler notified.
+2026-01-02 14:00:26,645:DEBUG:utils.logger - [STATE] Autoroll handler thread notified.
+2026-01-02 14:00:26,645:DEBUG:utils.logger - [building_monitor] building_monitor started. Notifying...
+2026-01-02 14:00:26,646:DEBUG:utils.logger - [STATE] Notifying building monitor thread...
+2026-01-02 14:00:26,846:DEBUG:utils.logger - [building_monitor] building_monitor notified.
+2026-01-02 14:00:27,047:DEBUG:utils.logger - [STATE] Building monitor thread notified.
+2026-01-02 14:00:27,048:DEBUG:utils.logger - [bank_heist] bank_heist started. Notifying...
+2026-01-02 14:00:27,249:DEBUG:utils.logger - [bank_heist] bank_heist notified.
+2026-01-02 14:00:27,255:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 14:00:27,450:DEBUG:utils.logger - [shut_down] shut_down started. Notifying...
+2026-01-02 14:00:27,651:DEBUG:utils.logger - [shut_down] shut_down notified.
+2026-01-02 14:00:27,657:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 14:00:27,852:DEBUG:utils.logger - [ui] ui started. Notifying...
+2026-01-02 14:00:28,053:DEBUG:utils.logger - [ui] ui notified.
+2026-01-02 14:00:28,254:DEBUG:utils.logger - [multiplier_monitor] multiplier_monitor started. Notifying...
+2026-01-02 14:00:28,254:DEBUG:utils.logger - [STATE] Notifying multiplier monitor thread...
+2026-01-02 14:00:28,455:DEBUG:utils.logger - [multiplier_monitor] multiplier_monitor notified.
+2026-01-02 14:00:28,656:DEBUG:utils.logger - [STATE] Multiplier monitor thread notified.
+2026-01-02 14:00:28,657:DEBUG:utils.logger - [autoroll_monitor] autoroll_monitor started. Notifying...
+2026-01-02 14:00:28,657:DEBUG:utils.logger - [STATE] Notifying autoroll monitor thread...
+2026-01-02 14:00:28,858:DEBUG:utils.logger - [autoroll_monitor] autoroll_monitor notified.
+2026-01-02 14:00:29,058:DEBUG:utils.logger - [STATE] Autoroll monitor thread notified.
+2026-01-02 14:00:29,058:DEBUG:utils.logger - [idle] idle started. Notifying...
+2026-01-02 14:00:29,260:DEBUG:utils.logger - [idle] idle notified.
+2026-01-02 14:00:29,461:DEBUG:utils.logger - [destruction] destruction started. Notifying...
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [DESTRUCTION] Starting destruction handler...
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [DESTRUCTION] Destruction handler is now active!
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [AR-H] Received notification! Starting...
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [HEIST] Received notification! Starting...
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [SD] Received notification! Starting...
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [MP-M] Received notification! Starting...
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [AR-M] Received notification! Starting...
+2026-01-02 14:00:29,462:DEBUG:utils.logger - [UI] Received notification! Starting...
+2026-01-02 14:00:29,463:DEBUG:utils.logger - [IDLE] Received notification! Starting...
+2026-01-02 14:00:29,463:DEBUG:utils.logger - [BUILD-M] ========================================
+2026-01-02 14:00:29,463:DEBUG:utils.logger - autoroller_running and disable_autoroller_running are False
+2026-01-02 14:00:29,465:DEBUG:utils.logger - [BUILD-M] Building Monitor STARTED
+2026-01-02 14:00:29,465:DEBUG:utils.logger - Updated autoroller_running to False. Notifying...
+2026-01-02 14:00:29,465:DEBUG:utils.logger - [BUILD-M] ========================================
+2026-01-02 14:00:29,465:DEBUG:utils.logger - Updated disable_autoroller_running to False. Notifying...
+2026-01-02 14:00:29,465:DEBUG:utils.logger - [BUILD-M] Minimum money required to build: 1000
+2026-01-02 14:00:29,465:DEBUG:utils.logger - [BUILD-M] Initial state: rolls=50, money=816397, in_home=False
+2026-01-02 14:00:29,585:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:29,662:DEBUG:utils.logger - [destruction] destruction notified.
+2026-01-02 14:00:30,467:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=50, money=816397). Waiting...
+2026-01-02 14:00:30,683:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:31,786:DEBUG:utils.logger - [HEIST] Active Check OCR: '-— > Sa
 '
-2025-12-30 18:47:06,172:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:06,530:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
-2025-12-30 18:47:06,881:DEBUG:utils.logger - [HEIST] Active Check OCR: 'i a
+2026-01-02 14:00:32,875:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:33,469:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=50, money=816397). Waiting...
+2026-01-02 14:00:33,969:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:35,062:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:36,153:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:36,271:DEBUG:utils.logger - [CACHE] Caching C:\Users\genie\Documents\GitHub\monopolygobot\images\ui\friends_exit.png...
+2026-01-02 14:00:36,472:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=50, money=816397). Waiting...
+2026-01-02 14:00:37,243:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:38,336:DEBUG:utils.logger - [HEIST] Active Check OCR: '>») ~ eee
 '
-2025-12-30 18:47:07,337:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=3, money=702389). Waiting...
-2025-12-30 18:47:07,531:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:07,839:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
-2025-12-30 18:47:07,980:DEBUG:utils.logger - [HEIST] Active Check OCR: 'Nemeth thal D>
+2026-01-02 14:00:38,563:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 14:00:38,564:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 14:00:39,475:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=50, money=816397). Waiting...
+2026-01-02 14:00:39,678:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 0/50
+2026-01-02 14:00:41,470:DEBUG:utils.logger - [CACHE] Caching C:\Users\genie\Documents\GitHub\monopolygobot\images\ui\build-exit.png...
+2026-01-02 14:00:41,493:DEBUG:utils.logger - [BUILD-M] Check #5: CONDIZIONI SODDISFATTE! rolls=0, money=816397
+2026-01-02 14:00:41,494:DEBUG:utils.logger - [BUILD-M] No more rolls available (rolls=0) and enough money (816397). Starting builder...
+2026-01-02 14:00:42,086:DEBUG:utils.logger - [BUILDER] Loaded data from BlueStacks App Player_game_data.json.
+2026-01-02 14:00:42,088:DEBUG:utils.logger - [BUILDER] Initialized successfully.
+2026-01-02 14:00:42,088:DEBUG:utils.logger - [BUILD-M] Builder handler thread started in BuildingMonitor
+2026-01-02 14:00:43,126:DEBUG:utils.logger - [BUILDER] Not in menu, looking for build icon
+2026-01-02 14:00:43,223:DEBUG:utils.logger - [BUILDER] Found build menu icon at (-1408, 942). Clicking...
+2026-01-02 14:00:44,700:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 14:00:44,989:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 14:00:45,418:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:45,658:DEBUG:utils.logger - [MP-M] Waiting for builder to finish...
+2026-01-02 14:00:45,831:DEBUG:utils.logger - [BUILDER] Board name is PROSPERITYDRIVE.
+2026-01-02 14:00:46,303:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:00:46,308:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:00:46,308:DEBUG:utils.logger - [BUILDER] Cost unknown for building1. Blind clicking...
+2026-01-02 14:00:46,510:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:47,628:DEBUG:utils.logger - [HEIST] Active Check OCR: '—— ies SE naa
 '
-2025-12-30 18:47:08,840:DEBUG:utils.logger - [AUTOROLL] Popup detected after click (2/3).
-2025-12-30 18:47:08,840:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:09,073:DEBUG:utils.logger - [HEIST] Active Check OCR: 'of). ae
+2026-01-02 14:00:48,010:DEBUG:utils.logger - [BUILDER] Popup detected! Consecutive count: 1
+2026-01-02 14:00:48,727:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:00:48,728:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:00:48,728:DEBUG:utils.logger - [BUILDER] Cost unknown for building2. Blind clicking...
+2026-01-02 14:00:48,732:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:49,822:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:50,921:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:51,134:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:00:51,134:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:00:51,134:DEBUG:utils.logger - [BUILDER] Cost unknown for building3. Blind clicking...
+2026-01-02 14:00:52,005:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:53,100:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:53,516:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.73M
 '
-2025-12-30 18:47:09,155:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
-2025-12-30 18:47:10,155:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:10,163:DEBUG:utils.logger - [HEIST] Active Check OCR: 'of). ae
+2026-01-02 14:00:53,516:DEBUG:utils.logger - [BUILD-H] Converted '2.73M
+' -> 2,730,000
+2026-01-02 14:00:53,517:DEBUG:utils.logger - [BUILDER] Cost 2730000 > Money 816397. Skipping building4.
+2026-01-02 14:00:53,798:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '4.21M
 '
-2025-12-30 18:47:10,339:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=3, money=702389). Waiting...
-2025-12-30 18:47:10,490:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
-2025-12-30 18:47:11,253:DEBUG:utils.logger - [HEIST] Active Check OCR: 'of). ae
+2026-01-02 14:00:53,798:DEBUG:utils.logger - [BUILD-H] Converted '4.21M
+' -> 4,210,000
+2026-01-02 14:00:53,798:DEBUG:utils.logger - [BUILDER] Cost 4210000 > Money 816397. Skipping building5.
+2026-01-02 14:00:54,182:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:54,998:DEBUG:utils.logger - [BUILDER] Board name is PROSPERITYDRIVE.
+2026-01-02 14:00:55,173:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:00:55,173:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:00:55,173:DEBUG:utils.logger - [BUILDER] Cost unknown for building1. Blind clicking...
+2026-01-02 14:00:55,273:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:55,658:DEBUG:utils.logger - [MP-M] Waiting for builder to finish...
+2026-01-02 14:00:56,361:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:57,471:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:57,558:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:00:57,558:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:00:57,558:DEBUG:utils.logger - [BUILDER] Cost unknown for building2. Blind clicking...
+2026-01-02 14:00:58,562:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:59,654:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:00:59,953:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:00:59,954:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:00:59,954:DEBUG:utils.logger - [BUILDER] Cost unknown for building3. Blind clicking...
+2026-01-02 14:01:00,757:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:01,850:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:02,334:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.73M
 '
-2025-12-30 18:47:11,491:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:11,831:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
-2025-12-30 18:47:12,338:DEBUG:utils.logger - [HEIST] Active Check OCR: 'of). ae
+2026-01-02 14:01:02,334:DEBUG:utils.logger - [BUILD-H] Converted '2.73M
+' -> 2,730,000
+2026-01-02 14:01:02,335:DEBUG:utils.logger - [BUILDER] Cost 2730000 > Money 816397. Skipping building4.
+2026-01-02 14:01:02,608:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '4.21M
 '
-2025-12-30 18:47:12,832:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:13,130:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
-2025-12-30 18:47:13,315:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
-2025-12-30 18:47:13,316:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
-2025-12-30 18:47:13,342:DEBUG:utils.logger - [BUILD-M] Conditions not met (rolls=3, money=702389). Waiting...
-2025-12-30 18:47:14,131:DEBUG:utils.logger - [AUTOROLL] Popup detected after click (3/3).
-2025-12-30 18:47:14,131:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
-2025-12-30 18:47:14,226:DEBUG:utils.logger - [AUTOROLL] GO button found at (-505, 806). Executing Long Press...
-2025-12-30 18:47:15,072:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 0/50
-2025-12-30 18:47:16,170:DEBUG:utils.logger - [BUILD-M] Check #9: CONDIZIONI SODDISFATTE! rolls=0, money=702389
-2025-12-30 18:47:16,171:DEBUG:utils.logger - [BUILD-M] No more rolls available (rolls=0) and enough money (702389). Starting builder...
-2025-12-30 18:47:16,372:DEBUG:utils.logger - [BUILD-M] Stopping autoroller...
-2025-12-30 18:47:16,372:DEBUG:utils.logger - Updated autoroller_running to False. Notifying...
-2025-12-30 18:47:16,830:DEBUG:utils.logger - [AUTOROLL] Long Press executed.
-2025-12-30 18:47:18,733:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
-2025-12-30 18:47:19,183:DEBUG:utils.logger - [AUTOROLL] Exiting autoroll...
-2025-12-30 18:47:19,184:DEBUG:utils.logger - Autoroller thread joined in stop_autoroller
-2025-12-30 18:47:19,184:DEBUG:utils.logger - Autoroller thread stopped in stop_autoroller
-2025-12-30 18:47:19,184:DEBUG:utils.logger - [BUILD-M] Autoroller stopped in BuildingMonitor
-2025-12-30 18:47:19,184:DEBUG:utils.logger - Updated disable_autoroller_running to True. Notifying...
-2025-12-30 18:47:19,185:DEBUG:utils.logger - Disable autoroller thread started in start_disable_autoroller
-2025-12-30 18:47:19,191:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
-2025-12-30 18:47:19,424:DEBUG:utils.logger - [HEIST] Active Check OCR: '_ — al
+2026-01-02 14:01:02,608:DEBUG:utils.logger - [BUILD-H] Converted '4.21M
+' -> 4,210,000
+2026-01-02 14:01:02,608:DEBUG:utils.logger - [BUILDER] Cost 4210000 > Money 816397. Skipping building5.
+2026-01-02 14:01:02,932:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:03,812:DEBUG:utils.logger - [BUILDER] Board name is PROSPERITYDRIVE.
+2026-01-02 14:01:03,991:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:01:03,991:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:01:03,992:DEBUG:utils.logger - [BUILDER] Cost unknown for building1. Blind clicking...
+2026-01-02 14:01:04,031:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:05,135:DEBUG:utils.logger - [HEIST] Active Check OCR: 'Te nae
 '
-2025-12-30 18:47:19,821:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
-2025-12-30 18:47:19,822:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
-2025-12-30 18:47:20,404:DEBUG:utils.logger - [MP-M] Waiting for builder to finish...
-2025-12-30 18:47:20,958:DEBUG:utils.logger - [BUILDER] Loaded data from BlueStacks App Player_game_data.json.
-2025-12-30 18:47:20,958:DEBUG:utils.logger - [BUILDER] Initialized successfully.
-2025-12-30 18:47:20,958:DEBUG:utils.logger - [BUILD-M] Builder handler thread started in BuildingMonitor
-2025-12-30 18:47:21,374:DEBUG:utils.logger - [AR-M] Waiting for builder to finish...
-2025-12-30 18:47:22,006:DEBUG:utils.logger - [BUILDER] Not in menu, looking for build icon
-2025-12-30 18:47:22,113:DEBUG:utils.logger - [BUILDER] Found build menu icon at (-657, 946). Clicking...
-2025-12-30 18:47:23,875:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
-2025-12-30 18:47:23,891:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
-2025-12-30 18:47:24,514:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
-2025-12-30 18:47:24,721:DEBUG:utils.logger - [BUILDER] Board name is PROSPERITYDRIVE.
-2025-12-30 18:47:24,916:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '1.14M
+2026-01-02 14:01:05,659:DEBUG:utils.logger - [MP-M] Waiting for builder to finish...
+2026-01-02 14:01:06,233:DEBUG:utils.logger - [HEIST] Active Check OCR: '=~ Te naa
 '
-2025-12-30 18:47:24,916:DEBUG:utils.logger - [BUILD-H] Converted '1.14M
-' -> 1,140,000
-2025-12-30 18:47:24,917:DEBUG:utils.logger - [BUILDER] Cost 1140000 > Money 750889. Skipping building1.
-2025-12-30 18:47:25,207:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '1.84M
+2026-01-02 14:01:06,382:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:01:06,382:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:01:06,382:DEBUG:utils.logger - [BUILDER] Cost unknown for building2. Blind clicking...
+2026-01-02 14:01:07,326:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:08,413:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:08,767:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 14:01:08,767:DEBUG:utils.logger - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 14:01:08,767:DEBUG:utils.logger - [BUILDER] Cost unknown for building3. Blind clicking...
+2026-01-02 14:01:09,498:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:10,596:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:11,157:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.73M
 '
-2025-12-30 18:47:25,208:DEBUG:utils.logger - [BUILD-H] Converted '1.84M
-' -> 1,840,000
-2025-12-30 18:47:25,208:DEBUG:utils.logger - [BUILDER] Cost 1840000 > Money 750889. Skipping building2.
-2025-12-30 18:47:25,510:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.18M
+2026-01-02 14:01:11,157:DEBUG:utils.logger - [BUILD-H] Converted '2.73M
+' -> 2,730,000
+2026-01-02 14:01:11,158:DEBUG:utils.logger - [BUILDER] Cost 2730000 > Money 816397. Skipping building4.
+2026-01-02 14:01:11,430:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '4.21M
 '
-2025-12-30 18:47:25,510:DEBUG:utils.logger - [BUILD-H] Converted '2.18M
-' -> 2,180,000
-2025-12-30 18:47:25,510:DEBUG:utils.logger - [BUILDER] Cost 2180000 > Money 750889. Skipping building3.
-2025-12-30 18:47:25,612:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
-2025-12-30 18:47:25,810:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.13M
+2026-01-02 14:01:11,430:DEBUG:utils.logger - [BUILD-H] Converted '4.21M
+' -> 4,210,000
+2026-01-02 14:01:11,430:DEBUG:utils.logger - [BUILDER] Cost 4210000 > Money 816397. Skipping building5.
+2026-01-02 14:01:11,532:DEBUG:utils.logger - [BUILDER] Max cycles reached (3). Exiting to prevent infinite loop.
+2026-01-02 14:01:11,532:DEBUG:utils.logger - [BUILDER] Exiting building handler...
+2026-01-02 14:01:11,532:DEBUG:utils.logger - [BUILDER] Saving data to BlueStacks App Player_game_data.json...
+2026-01-02 14:01:11,718:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:11,837:DEBUG:utils.logger - [BUILDER] Exiting build menu...
+2026-01-02 14:01:12,807:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:01:13,434:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 14:01:13,436:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 14:01:14,539:DEBUG:utils.logger - [BUILD-M] Builder handler finished
+2026-01-02 14:01:14,740:DEBUG:utils.logger - [BUILD-M] Build cycle completed. Entering Wait Mode until rolls increase...
+2026-01-02 14:01:15,254:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '709:05
 '
-2025-12-30 18:47:25,810:DEBUG:utils.logger - [BUILD-H] Converted '2.13M
-' -> 2,130,000
-2025-12-30 18:47:25,811:DEBUG:utils.logger - [BUILDER] Cost 2130000 > Money 750889. Skipping building4.
-2025-12-30 18:47:26,092:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.58M
+2026-01-02 14:01:15,254:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (09:05)
+2026-01-02 14:01:43,511:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:02:15,737:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '708:04
 '
-2025-12-30 18:47:26,093:DEBUG:utils.logger - [BUILD-H] Converted '2.58M
-' -> 2,580,000
-2025-12-30 18:47:26,093:DEBUG:utils.logger - [BUILDER] Cost 2580000 > Money 750889. Skipping building5.
-2025-12-30 18:47:26,194:DEBUG:utils.logger - [BUILDER] No affordable buildings found (Money < All Costs). Exiting...
-2025-12-30 18:47:26,195:DEBUG:utils.logger - [BUILDER] Exiting building handler...
-2025-12-30 18:47:26,195:DEBUG:utils.logger - [BUILDER] Saving data to BlueStacks App Player_game_data.json...
-2025-12-30 18:47:26,474:DEBUG:utils.logger - [BUILDER] Exiting build menu...
-2025-12-30 18:47:26,703:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
-2025-12-30 18:47:27,812:DEBUG:utils.logger - [HEIST] Active Check OCR: 'ae ie
+2026-01-02 14:02:15,738:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (08:04)
+2026-01-02 14:02:18,925:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:02:54,410:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:03:16,063:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '707:05
 '
-2025-12-30 18:47:28,434:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
-2025-12-30 18:47:28,435:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
-2025-12-30 18:47:29,176:DEBUG:utils.logger - [BUILD-M] Builder handler finished
-2025-12-30 18:47:29,176:DEBUG:utils.logger - [BUILD-M] Stopping disable_autoroller...
-2025-12-30 18:47:29,176:DEBUG:utils.logger - Updated disable_autoroller_running to False. Notifying...
-2025-12-30 18:47:30,405:DEBUG:utils.logger - [MP-M] Waiting for builder to finish...
-2025-12-30 18:47:31,377:DEBUG:utils.logger - [AR-M] Waiting for builder to finish...
-2025-12-30 18:47:33,847:DEBUG:utils.logger - [AUTOROLL] Exiting disable_autoroll...
-2025-12-30 18:47:33,847:DEBUG:utils.logger - Disable autoroller thread joined in stop_disable_autoroller
-2025-12-30 18:47:33,848:DEBUG:utils.logger - Disable autoroller thread stopped in stop_disable_autoroller
-2025-12-30 18:47:34,049:DEBUG:utils.logger - [BUILD-M] Build cycle completed. Waiting for next cycle...
-2025-12-30 18:47:34,305:DEBUG:utils.logger - [BUILD-M] Check #10: CONDIZIONI SODDISFATTE! rolls=0, money=750889
-2025-12-30 18:47:34,305:DEBUG:utils.logger - [BUILD-M] No more rolls available (rolls=0) and enough money (750889). Starting builder...
-2025-12-30 18:47:34,897:DEBUG:utils.logger - [BUILDER] Loaded data from BlueStacks App Player_game_data.json.
-2025-12-30 18:47:34,897:DEBUG:utils.logger - [BUILDER] Initialized successfully.
-2025-12-30 18:47:35,990:DEBUG:utils.logger - [BUILDER] Not in menu, looking for build icon
-2025-12-30 18:47:36,119:DEBUG:utils.logger - [BUILDER] Found build menu icon at (-657, 946). Clicking...
-2025-12-30 18:47:37,900:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
-2025-12-30 18:47:38,449:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
-2025-12-30 18:47:38,711:DEBUG:utils.logger - [BUILDER] Board name is PROSPERITYDRIVE.
-2025-12-30 18:47:38,881:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '1.14M
+2026-01-02 14:03:16,064:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (07:05)
+2026-01-02 14:03:29,699:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:04:05,083:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:04:16,456:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '706:03
 '
-2025-12-30 18:47:38,881:DEBUG:utils.logger - [BUILD-H] Converted '1.14M
-' -> 1,140,000
-2025-12-30 18:47:38,881:DEBUG:utils.logger - [BUILDER] Cost 1140000 > Money 750889. Skipping building1.
-2025-12-30 18:47:38,900:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
-2025-12-30 18:47:39,159:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '1.84M
+2026-01-02 14:04:16,456:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (06:03)
+2026-01-02 14:04:40,468:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:05:15,750:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:05:16,688:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '705:04
 '
-2025-12-30 18:47:39,159:DEBUG:utils.logger - [BUILD-H] Converted '1.84M
-' -> 1,840,000
-2025-12-30 18:47:39,160:DEBUG:utils.logger - [BUILDER] Cost 1840000 > Money 750889. Skipping building2.
-2025-12-30 18:47:39,462:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.18M
+2026-01-02 14:05:16,689:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (05:04)
+2026-01-02 14:05:51,113:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:06:16,929:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '704:04
 '
-2025-12-30 18:47:39,462:DEBUG:utils.logger - [BUILD-H] Converted '2.18M
-' -> 2,180,000
-2025-12-30 18:47:39,462:DEBUG:utils.logger - [BUILDER] Cost 2180000 > Money 750889. Skipping building3.
-2025-12-30 18:47:39,761:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.13M
+2026-01-02 14:06:16,929:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (04:04)
+2026-01-02 14:06:26,374:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:07:01,759:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:07:17,523:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '703:03
 '
-2025-12-30 18:47:39,762:DEBUG:utils.logger - [BUILD-H] Converted '2.13M
-' -> 2,130,000
-2025-12-30 18:47:39,762:DEBUG:utils.logger - [BUILDER] Cost 2130000 > Money 750889. Skipping building4.
-2025-12-30 18:47:40,000:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
-2025-12-30 18:47:40,044:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '2.58M
+2026-01-02 14:07:17,523:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (03:03)
+2026-01-02 14:07:26,758:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 14:07:27,000:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 14:07:27,972:DEBUG:utils.logger - [HEIST] Active Check OCR: 'SVYVYEE TI.
 '
-2025-12-30 18:47:40,045:DEBUG:utils.logger - [BUILD-H] Converted '2.58M
-' -> 2,580,000
-2025-12-30 18:47:40,045:DEBUG:utils.logger - [BUILDER] Cost 2580000 > Money 750889. Skipping building5.
-2025-12-30 18:47:40,145:DEBUG:utils.logger - [BUILDER] No affordable buildings found (Money < All Costs). Exiting...
-2025-12-30 18:47:40,145:DEBUG:utils.logger - [BUILDER] Exiting building handler...
-2025-12-30 18:47:40,146:DEBUG:utils.logger - [BUILDER] Saving data to BlueStacks App Player_game_data.json...
-2025-12-30 18:47:40,406:DEBUG:utils.logger - [MP-M] Waiting for builder to finish...
-2025-12-30 18:47:40,455:DEBUG:utils.logger - [BUILDER] Exiting build menu...
-2025-12-30 18:47:41,101:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
-2025-12-30 18:47:41,377:DEBUG:utils.logger - [AR-M] Waiting for builder to finish...
-2025-12-30 18:47:42,189:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
-2025-12-30 18:47:42,453:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
-2025-12-30 18:47:42,453:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
-2025-12-30 18:47:43,157:DEBUG:utils.logger - [BUILD-M] Builder handler finished
-2025-12-30 18:47:43,358:DEBUG:utils.logger - [BUILD-M] Build cycle completed. Waiting for next cycle...
-2025-12-30 18:47:44,081:DEBUG:utils.logger - [BUILD-M] Check #11: CONDIZIONI SODDISFATTE! rolls=0, money=750889
-2025-12-30 18:47:44,081:DEBUG:utils.logger - [BUILD-M] No more rolls available (rolls=0) and enough money (750889). Starting builder...
-2025-12-30 18:47:44,759:DEBUG:utils.logger - [BUILDER] Loaded data from BlueStacks App Player_game_data.json.
-2025-12-30 18:47:44,759:DEBUG:utils.logger - [BUILDER] Initialized successfully.
-2025-12-30 18:47:45,820:DEBUG:utils.logger - [BUILDER] Not in menu, looking for build icon
-2025-12-30 18:47:45,910:DEBUG:utils.logger - [BUILDER] Found build menu icon at (-657, 946). Clicking...
-2025-12-30 18:47:47,484:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
-2025-12-30 18:47:47,670:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
-2025-12-30 18:47:48,507:DEBUG:utils.logger - [BUILDER] Board name is PROSPERITYDRIVE.
-2025-12-30 18:47:48,687:DEBUG:utils.logger - [BUILD-H] Extracting cost from OCR text: '1.14M
+2026-01-02 14:07:29,058:DEBUG:utils.logger - [HEIST] Active Check OCR: 'SVYVYEE TI.
 '
-2025-12-30 18:47:48,687:DEBUG:utils.logger - [BUILD-H] Converted '1.14M
-' -> 1,140,000
-2025-12-30 18:47:48,687:DEBUG:utils.logger - [BUILDER] Cost 1140000 > Money 750889. Skipping building1.
-2025-12-30 18:47:48,815:INFO:utils.logger - [STATUS] Quick Exit triggered!
+2026-01-02 14:07:29,563:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 14:07:29,563:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 14:07:40,793:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:08:16,158:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:08:18,121:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '702:02
+'
+2026-01-02 14:08:18,121:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (02:02)
+2026-01-02 14:08:51,410:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:09:18,355:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '701:02
+'
+2026-01-02 14:09:18,356:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (01:02)
+2026-01-02 14:09:26,652:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:10:02,006:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 816,397
+2026-01-02 14:10:18,477:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '700:02
+'
+2026-01-02 14:10:18,478:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (00:02)
+2026-01-02 14:10:20,733:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 6/50
+2026-01-02 14:10:21,327:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 7/50
+2026-01-02 14:10:31,416:DEBUG:utils.logger - [AR-M] Rolls >= 1 (or None). Starting autoroller...
+2026-01-02 14:10:31,416:DEBUG:utils.logger - Updated autoroller_running to True. Notifying...
+2026-01-02 14:10:31,417:DEBUG:utils.logger - Autoroller thread started in start_autoroller
+2026-01-02 14:10:31,417:DEBUG:utils.logger - [AUTOROLL] Startup check 1/5...
+2026-01-02 14:10:31,418:INFO:utils.logger - [AUTOROLL] Popup detected during startup. Proceeding to main loop.
+2026-01-02 14:10:31,418:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
+2026-01-02 14:10:31,530:DEBUG:utils.logger - [AUTOROLL] GO button found at (-1256, 799). Executing Long Press...
+2026-01-02 14:10:33,222:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 5/50
+2026-01-02 14:10:34,135:DEBUG:utils.logger - [AUTOROLL] Long Press executed.
+2026-01-02 14:10:34,143:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 14:10:34,356:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 14:10:36,186:DEBUG:utils.logger - [HEIST] Active Check OCR: '~~ 8
+'
+2026-01-02 14:10:37,308:DEBUG:utils.logger - [HEIST] Active Check OCR: '6 ior -
+'
+2026-01-02 14:10:38,408:DEBUG:utils.logger - [HEIST] Active Check OCR: '.  ¢*.4. 2
+'
+2026-01-02 14:10:39,506:DEBUG:utils.logger - [HEIST] Active Check OCR: '~ ¢*¢.4 2
+'
+2026-01-02 14:10:40,600:DEBUG:utils.logger - [HEIST] Active Check OCR: '~ ¢*¢.4 2
+'
+2026-01-02 14:10:41,490:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
+2026-01-02 14:10:41,700:DEBUG:utils.logger - [HEIST] Active Check OCR: '~ ¢*¢.4 2
+'
+2026-01-02 14:10:41,821:DEBUG:utils.logger - [AUTOROLL] GO button NOT found.
+2026-01-02 14:10:42,785:DEBUG:utils.logger - [HEIST] Active Check OCR: '~ ¢*¢.4 2
+'
+2026-01-02 14:10:42,822:DEBUG:utils.logger - [AUTOROLL] Popup detected after click (1/3).
+2026-01-02 14:10:43,880:DEBUG:utils.logger - [HEIST] Active Check OCR: '~ ¢*¢.4 2
+'
+2026-01-02 14:10:44,974:DEBUG:utils.logger - [HEIST] Active Check OCR: '> ay =
+'
+2026-01-02 14:10:46,062:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:10:47,154:DEBUG:utils.logger - [HEIST] Active Check OCR: ''
+2026-01-02 14:10:47,822:DEBUG:utils.logger - [AUTOROLL] Popup detected (2/10).
+2026-01-02 14:10:47,822:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
+2026-01-02 14:10:47,936:DEBUG:utils.logger - [AUTOROLL] GO button found at (-1256, 799). Executing Long Press...
+2026-01-02 14:10:48,246:DEBUG:utils.logger - [HEIST] Active Check OCR: '4 ae
+'
+2026-01-02 14:10:48,992:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 14:10:48,992:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 14:10:50,107:DEBUG:utils.logger - [PLAYER-INFO] Rolls updated: 0/50
+2026-01-02 14:10:50,541:DEBUG:utils.logger - [AUTOROLL] Long Press executed.
+2026-01-02 14:10:50,753:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 14:10:51,219:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 14:10:51,342:DEBUG:utils.logger - [HEIST] Active Check OCR: '. *4. 28
+'
+2026-01-02 14:10:52,438:DEBUG:utils.logger - [HEIST] Active Check OCR: '. .  *. 28
+'
+2026-01-02 14:10:53,096:DEBUG:utils.logger - [AUTOROLL] Popup detected after click (3/3).
+2026-01-02 14:10:53,547:DEBUG:utils.logger - [HEIST] Active Check OCR: '~ .  *.4. 28
+'
+2026-01-02 14:10:54,636:DEBUG:utils.logger - [HEIST] Active Check OCR: '~ .  *.4. 28
+'
+2026-01-02 14:10:55,217:WARNING:utils.logger - [UI] Stuck on UI elements (5 consecutive clicks). Attempting BLIND CLICK.
+2026-01-02 14:10:55,260:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 14:10:55,261:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 14:10:55,605:DEBUG:utils.logger - [AUTOROLL] Searching for GO button...
+2026-01-02 14:10:55,715:DEBUG:utils.logger - [AUTOROLL] GO button found at (-1233, 801). Executing Long Press...
+2026-01-02 14:10:56,969:DEBUG:utils.logger - [AR-M] Rolls < 1. Stopping autoroller...
+2026-01-02 14:10:56,971:DEBUG:utils.logger - Updated autoroller_running to False. Notifying...
+2026-01-02 14:10:58,154:DEBUG:utils.logger - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 14:10:58,218:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:10:58,719:DEBUG:utils.logger - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 14:10:59,023:DEBUG:utils.logger - [AUTOROLL] Long Press executed.
+2026-01-02 14:10:59,735:DEBUG:utils.logger - [HEIST] Active Check OCR: '“~~?
+'
+2026-01-02 14:11:00,830:DEBUG:utils.logger - [HEIST] Active Check OCR: '“~~ ee.
+'
+2026-01-02 14:11:00,947:DEBUG:utils.logger - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 14:11:00,947:DEBUG:utils.logger - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 14:11:01,578:DEBUG:utils.logger - [AUTOROLL] Popup detected after click (4/3).
+2026-01-02 14:11:01,578:DEBUG:utils.logger - [AUTOROLL] Exiting autoroll...
+2026-01-02 14:11:01,578:DEBUG:utils.logger - Autoroller thread joined in stop_autoroller
+2026-01-02 14:11:01,578:DEBUG:utils.logger - Autoroller thread stopped in stop_autoroller
+2026-01-02 14:11:01,579:DEBUG:utils.logger - Updated disable_autoroller_running to True. Notifying...
+2026-01-02 14:11:01,580:DEBUG:utils.logger - Disable autoroller thread started in start_disable_autoroller
+2026-01-02 14:11:18,886:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '759:01
+'
+2026-01-02 14:11:18,887:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (59:01)
+2026-01-02 14:11:37,034:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:12:12,624:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:12:19,320:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '758:01
+'
+2026-01-02 14:12:19,321:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (58:01)
+2026-01-02 14:12:48,340:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:13:19,875:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '757:00
+'
+2026-01-02 14:13:19,876:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (57:00)
+2026-01-02 14:13:23,840:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:13:59,455:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:14:20,390:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '756:00
+'
+2026-01-02 14:14:20,390:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (56:00)
+2026-01-02 14:14:35,061:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:15:10,786:DEBUG:utils.logger - [PLAYER-INFO] Money updated: 844,373
+2026-01-02 14:15:20,989:DEBUG:utils.logger - [BUILD-M] Raw Wait Time OCR: '755:00
+'
+2026-01-02 14:15:20,989:DEBUG:utils.logger - [BUILD-M] Waiting for rolls... (55:00)
+2026-01-02 14:15:36,259:INFO:utils.logger - [STATUS] Quick Exit triggered!

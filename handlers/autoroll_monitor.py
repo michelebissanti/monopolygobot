@@ -98,6 +98,7 @@ class AutorollMonitor:
                                     )
                         if not autoroller_running:
                             with shared_state.start_autoroller_lock:
+                                shared_state.bot_status = "AUTOROLLING"
                                 ar_handler_instance.start_autoroller()
                                 with shared_state.autoroller_running_condition:
                                     shared_state.autoroller_running_condition.wait_for(

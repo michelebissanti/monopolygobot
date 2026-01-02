@@ -268,7 +268,7 @@ class BuildingHandler:
                 logger.debug("[BUILDER] Not in menu, looking for build icon")
                 build_path = os.path.join(self.current_path, "images", "build.png")
                 build_image = shared_state.load_image(build_path)
-                location = ocr_utils.find(build_image)
+                location = ocr_utils.find(build_image, label_name="Build Icon")
                 if location:
                     logger.debug(f"[BUILDER] Found build menu icon at {location}. Clicking...")
                     x, y = location
@@ -291,7 +291,7 @@ class BuildingHandler:
         """
         exit_path = os.path.join(self.current_path, "images", "build-exit.png")
         exit_image = shared_state.load_image(exit_path)
-        location = ocr_utils.find(exit_image)
+        location = ocr_utils.find(exit_image, label_name="Build Exit Icon")
         if not location:
             # logger.debug("[BUILDER] Not in build menu.")
             return False
@@ -461,7 +461,7 @@ class BuildingHandler:
             in_menu = self.check_menu_status()
             print(in_menu)
             while in_menu:
-                location = ocr_utils.find(build_exit_image)
+                location = ocr_utils.find(build_exit_image, label_name="Build Exit Icon")
                 logger.debug("[BUILDER] Exiting build menu...")
                 if location:
                     with shared_state.moveTo_lock:
@@ -500,113 +500,140 @@ class BuildingHandler:
             
         consecutive_popups = 0
         
-        while True:
-            # Check exit condition based on popups
-            if consecutive_popups >= 3:
-                logger.debug("[BUILDER] 3 Consecutive UI popups detected. Assuming money is spent. Exiting...")
-                break
-                
-            self.board_name = self.gather_board_name()
-            # If board name invalid, try to re-enter or continue
-            
-            # Update Money from shared state
-            with shared_state.money_condition:
-                if shared_state.money is not None:
-                    self.current_money = shared_state.money
-                
-            # Iterate through buildings
-            actions_taken_in_this_cycle = 0
-            affordable_structure_found = False
-            
-            for building_info in self.buildings:
-                # Check popup limit immediately
+        max_cycles = 3 # Safety limit to prevent infinite loops
+        current_cycle = 0
+
+        try:
+            while current_cycle < max_cycles:
+                current_cycle += 1
+                # Check exit condition based on popups
                 if consecutive_popups >= 3:
+                    logger.debug("[BUILDER] 3 Consecutive UI popups detected. Assuming money is spent. Exiting...")
                     break
                     
-                # Ensure we are in menu
-                if not self.check_menu_status():
-                    logger.debug("[BUILDER] Lost menu focus, trying to re-enter...")
-                    self.enter_build_menu()
+                self.board_name = self.gather_board_name()
                 
-                building_name = building_info["name"]
-                x_percent = building_info["x_percent"]
-                y_percent = building_info["y_percent"]
-                right_percent = building_info["right_percent"]
-                bottom_percent = building_info["bottom_percent"]
-                
-                # Calculate coordinates
-                self.x = int(self.window_x + (self.window_width * (x_percent / 100)))
-                self.y = int(self.window_y + (self.window_height * (y_percent / 100)))
-                self.right = int(self.window_x + (self.window_width * (right_percent / 100)))
-                self.bottom = int(self.window_y + (self.window_height * (bottom_percent / 100)))
-                
-                # Attempt OCR
-                ocr_settings = r"--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789.MK"
-                process_settings = {"threshold_value": 100, "invert": True, "scale_factor": 3}
-                
-                cost_text = ocr_utils.ocr_to_str(
-                    x_percent, y_percent, right_percent, bottom_percent,
-                    ocr_settings=ocr_settings,
-                    process_settings=process_settings
-                )
-                cost = self.extract_and_convert_cost(cost_text)
-                
-                should_click = False
-                
-                if cost > 0:
-                    # Valid cost detected
-                    if self.current_money >= cost:
-                        logger.debug(f"[BUILDER] Cost {cost} <= Money {self.current_money}. Clicking {building_name}...")
-                        should_click = True
-                        affordable_structure_found = True
-                    else:
-                        logger.debug(f"[BUILDER] Cost {cost} > Money {self.current_money}. Skipping {building_name}.")
-                        should_click = False
-                else:
-                    # Invalid/Unknown cost -> Blind Click (Fallback if OCR fails)
-                    logger.debug(f"[BUILDER] Cost unknown for {building_name}. Blind clicking...")
-                    should_click = True
-                    affordable_structure_found = True # Assume potentially affordable
-                
-                if should_click:
-                    with shared_state.moveTo_lock:
-                        moveTo(self.x, self.y)
-                        click()
-                    actions_taken_in_this_cycle += 1
-                    sleep(1.5) # Wait for animation/potential popup
+                # Update Money from shared state
+                with shared_state.money_condition:
+                    if shared_state.money is not None:
+                        self.current_money = shared_state.money
                     
-                    # Check for popup
-                    # We need to check if the UI handler flagged a popup
-                    popup_detected = False
-                    with shared_state.ui_condition:
-                        if shared_state.popup_handled:
-                            popup_detected = True
-                            shared_state.popup_handled = False # Reset
-                    
-                    if popup_detected:
-                        consecutive_popups += 1
-                        logger.debug(f"[BUILDER] Popup detected! Consecutive count: {consecutive_popups}")
-                    else:
-                        consecutive_popups = 0 # Reset on success/no-popup
+                # Iterate through buildings
+                actions_taken_in_this_cycle = 0
+                affordable_structure_found = False
+                
+                for building_info in self.buildings:
+                    # Check popup limit immediately
+                    if consecutive_popups >= 3:
+                        break
                         
-                    # Update money after action
-                    with shared_state.money_condition:
-                         shared_state.money_condition.wait(timeout=0.5)
-                         self.current_money = shared_state.money if shared_state.money is not None else self.current_money
-                else:
-                    sleep(0.1)
+                    # Ensure we are in menu
+                    if not self.check_menu_status():
+                        logger.debug("[BUILDER] Lost menu focus, trying to re-enter...")
+                        self.enter_build_menu()
+                    
+                    building_name = building_info["name"]
+                    x_percent = building_info["x_percent"]
+                    y_percent = building_info["y_percent"]
+                    right_percent = building_info["right_percent"]
+                    bottom_percent = building_info["bottom_percent"]
+                    
+                    # Calculate coordinates
+                    self.x = int(self.window_x + (self.window_width * (x_percent / 100)))
+                    self.y = int(self.window_y + (self.window_height * (y_percent / 100)))
+                    self.right = int(self.window_x + (self.window_width * (right_percent / 100)))
+                    self.bottom = int(self.window_y + (self.window_height * (bottom_percent / 100)))
+                    
+                    # --- NEW: Check if building is finished ---
+                    try:
+                        search_bbox = (self.x - 20, self.y - 20, (self.right - self.x) + 40, (self.bottom - self.y) + 40)
+                        finished_loc = ocr_utils.find(building_finished_image, bbox=search_bbox, threshold=0.7, label_name=f"{building_name} Finished") 
+                        
+                        if finished_loc:
+                            logger.debug(f"[BUILDER] {building_name} is finished (icon detected). Skipping.")
+                            continue
+                    except Exception as e:
+                        logger.warning(f"[BUILDER] Failed to check finished status: {e}")
+                    # ------------------------------------------
 
-            # Optimization: If we checked all buildings and none were affordable, EXIT.
-            if not affordable_structure_found and actions_taken_in_this_cycle == 0:
-                logger.debug("[BUILDER] No affordable buildings found (Money < All Costs). Exiting...")
-                break
+                    # Attempt OCR
+                    ocr_settings = r"--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789.MK"
+                    process_settings = {"threshold_value": 100, "invert": True, "scale_factor": 3}
+                    
+                    cost_text = ocr_utils.ocr_to_str(
+                        x_percent, y_percent, right_percent, bottom_percent,
+                        ocr_settings=ocr_settings,
+                        process_settings=process_settings
+                    )
+                    cost = self.extract_and_convert_cost(cost_text)
+                    
+                    should_click = False
+                    
+                    if cost > 0:
+                        # Valid cost detected
+                        if self.current_money >= cost:
+                            logger.debug(f"[BUILDER] Cost {cost} <= Money {self.current_money}. Clicking {building_name}...")
+                            should_click = True
+                            affordable_structure_found = True
+                        else:
+                            logger.debug(f"[BUILDER] Cost {cost} > Money {self.current_money}. Skipping {building_name}.")
+                            should_click = False
+                    else:
+                        # Invalid/Unknown cost -> Blind Click (Fallback if OCR fails)
+                        logger.debug(f"[BUILDER] Cost unknown for {building_name}. Blind clicking...")
+                        should_click = True
+                        affordable_structure_found = True 
+                    
+                    if should_click:
+                        with shared_state.moveTo_lock:
+                            moveTo(self.x, self.y)
+                            click()
+                        actions_taken_in_this_cycle += 1
+                        sleep(1.5) # Wait for animation/potential popup
+                        
+                        # Check for popup
+                        popup_detected = False
+                        with shared_state.ui_condition:
+                            if shared_state.popup_handled:
+                                popup_detected = True
+                                shared_state.popup_handled = False 
+                        
+                        if popup_detected:
+                            consecutive_popups += 1
+                            logger.debug(f"[BUILDER] Popup detected! Consecutive count: {consecutive_popups}")
+                        else:
+                            consecutive_popups = 0 
+                            
+                        # Update money after action
+                        with shared_state.money_condition:
+                             shared_state.money_condition.wait(timeout=0.5)
+                             self.current_money = shared_state.money if shared_state.money is not None else self.current_money
+                    else:
+                        sleep(0.1)
+
+                if current_cycle >= max_cycles:
+                    logger.debug(f"[BUILDER] Max cycles reached ({max_cycles}). Exiting to prevent infinite loop.")
+                    break
+
+                # Optimization: If we checked all buildings and none were affordable, EXIT.
+                if not affordable_structure_found and actions_taken_in_this_cycle == 0:
+                    logger.debug("[BUILDER] No affordable buildings found (Money < All Costs). Exiting...")
+                    break
+                    
+                sleep(1) 
                 
-            sleep(1) 
+        except Exception as e:
+            logger.error(f"[BUILDER] Exception in building loop: {e}")
 
-        # Cleanup and Exit
-        logger.debug("[BUILDER] Exiting building handler...")
-        self.save_data()
-        self.exit_build_menu() # Try to exit gracefully
-        with shared_state.builder_finished_condition:
-            shared_state.builder_finished = True
-            shared_state.builder_finished_condition.notify_all()
+        finally:
+            # Cleanup and Exit
+            logger.debug("[BUILDER] Exiting building handler...")
+            self.save_data()
+            try:
+                self.exit_build_menu() 
+            except Exception as e:
+                logger.error(f"[BUILDER] Error exiting build menu: {e}")
+                
+            with shared_state.builder_finished_condition:
+                shared_state.builder_finished = True
+                shared_state.builder_finished_condition.notify_all()

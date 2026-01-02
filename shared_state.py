@@ -114,6 +114,7 @@ class SharedState:
         # Debug / Visualizer
         self.debug_overlays = [] # List of tuples: (rect/point, label, timestamp)
         self.recent_logs = [] # List of strings
+        self.bot_status = "RUNNING" # Current status string (e.g. "RUNNING", "PAUSED", "IDLE")
 
     def load_image(self, path: str):
         return image_cache.load_image(path)

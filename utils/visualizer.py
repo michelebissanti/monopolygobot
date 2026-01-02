@@ -78,6 +78,19 @@ class Visualizer:
                     # for log in reversed(shared_state.recent_logs):
                     #     ...
 
+                    
+                    # Draw Status
+                    if hasattr(shared_state, "bot_status") and shared_state.bot_status:
+                         status_text = f"STATUS: {shared_state.bot_status}"
+                         # Draw black background
+                         (text_w, text_h), baseline = cv2.getTextSize(status_text, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
+                         cv2.rectangle(frame, (5, 5), (5 + text_w + 10, 5 + text_h + 10), (0, 0, 0), -1)
+                         # Draw text
+                         color = (0, 255, 0) # Green
+                         if "PAUSED" in shared_state.bot_status or "WAIT" in shared_state.bot_status:
+                              color = (0, 0, 255) # Red
+                         cv2.putText(frame, status_text, (10, 5 + text_h), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+
                     # 4. Show Frame
                     cv2.imshow(self.window_name, frame)
                     

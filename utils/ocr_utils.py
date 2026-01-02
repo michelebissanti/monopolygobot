@@ -38,7 +38,7 @@ class OCRUtils:
         self.window_coords = shared_state.window_coords
         self.window_size = self.window
 
-    def find_template(self, template: np.ndarray, bbox=None, threshold=0.50) -> pyscreeze.Point | None:
+    def find_template(self, template: np.ndarray, bbox=None, threshold=0.50, label_name=None) -> pyscreeze.Point | None:
         """
         Robust Template Matching with Multi-Scale support.
         This allows finding UI elements even if the resolution differs slightly.
@@ -109,8 +109,12 @@ class OCRUtils:
                 h_final = int(t_h * best_scale)
                 top_left_abs = (int(x + bbox[0]), int(y + bbox[1]))
                 
+                display_label = f"Match ({int(best_match_val*100)}%) S:{best_scale:.2f}"
+                if label_name:
+                    display_label = f"{label_name} ({int(best_match_val*100)}%)"
+
                 shared_state.debug_overlays.append(
-                    ((top_left_abs[0], top_left_abs[1], w_final, h_final), f"Match ({int(best_match_val*100)}%) S:{best_scale:.2f}", time.time())
+                    ((top_left_abs[0], top_left_abs[1], w_final, h_final), display_label, time.time())
                 )
                 
                 return match_center_absolute
@@ -122,7 +126,7 @@ class OCRUtils:
             return None
 
 
-    def find_sift(self, template: np.ndarray, bbox=None, min_match_count=10) -> pyscreeze.Point | None:
+    def find_sift(self, template: np.ndarray, bbox=None, min_match_count=10, label_name=None) -> pyscreeze.Point | None:
         """
         Find a template image using SIFT Feature Matching.
         Robust to scale, rotation, and brightness changes.
@@ -189,8 +193,12 @@ class OCRUtils:
                     )
                     # logger.debug(f"[OCR-SIFT] Found match with {len(good)} good matches.")
                     # Debug Overlay (SIFT uses center point usually)
+                    display_label = f"SIFT ({len(good)})"
+                    if label_name:
+                         display_label = f"{label_name} (SIFT {len(good)})"
+
                     shared_state.debug_overlays.append(
-                        (match_center_absolute, f"SIFT ({len(good)})", time.time())
+                        (match_center_absolute, display_label, time.time())
                     )
                     return match_center_absolute
             
@@ -201,15 +209,15 @@ class OCRUtils:
             print(f"[OCR-SIFT] Error: {e}")
             return None
 
-    def find(self, template: np.ndarray, bbox=None, threshold=0.65, min_match_count=8) -> pyscreeze.Point | None:
+    def find(self, template: np.ndarray, bbox=None, threshold=0.65, min_match_count=8, label_name=None) -> pyscreeze.Point | None:
         # Priority: SIFT > Template Matching
         
         # 1. Try SIFT (Feature Matching)
-        match = self.find_sift(template, bbox, min_match_count=min_match_count)
+        match = self.find_sift(template, bbox, min_match_count=min_match_count, label_name=label_name)
         
         # 2. Fallback
         if not match:
-             match = self.find_template(template, bbox, threshold)
+             match = self.find_template(template, bbox, threshold, label_name=label_name)
              
         # Safety Check: PyAutoGUI Fail-Safe trigger (corners)
         if match:

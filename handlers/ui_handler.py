@@ -43,6 +43,14 @@ class UIHandler:
                 for image_path in image_files:
                     if shared_state.idle_event.is_set():
                         shared_state.idle_event.wait()
+                    
+                    # Skip specific UI elements if builder is active (e.g. build-exit lookalikes)
+                    if shared_state.builder_running and "build-exit" in image_path:
+                         continue
+
+                    if shared_state.builder_running and "friends_exit" in image_path:
+                         continue
+
                     target_image = shared_state.load_image(image_path)
                     
                     # Use a slightly higher threshold for UI to avoid false positives? 
@@ -51,8 +59,11 @@ class UIHandler:
                     if location:
                         print(f"[UI] Detected {image_path}. Clicking...")
                         with shared_state.moveTo_lock:
-                            moveTo(location[0], location[1])
-                            click()
+                            try:
+                                moveTo(location[0], location[1])
+                                click()
+                            except Exception as e:
+                                logger.error(f"[UI] Failed to click {image_path} at {location}: {e}")
                         self.last_clicked_image = image_path
                         shared_state.moveto_center()
                         
@@ -78,6 +89,10 @@ class UIHandler:
                 # --- NEW: Check for "x" Close Button via OCR ---
                 # Region: L=45.89, T=93.81, W=8.41, H=4.79
                 if not found_any:
+                    # Skip 'x' check if builder is running (BuildingHandler manages its own exit)
+                    if shared_state.builder_running:
+                        continue 
+
                     ocr_text = ocr_utils.ocr_to_str(
                         45.89,
                         93.81,
