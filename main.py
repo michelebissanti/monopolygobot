@@ -1,4 +1,6 @@
 from sys import exit
+import sys
+from utils.logger import logger, configure_logger
 from shared_state import shared_state
 from handlers.state_handler import StateHandler
 from utils.set_console_title import SetConsoleTitle
@@ -7,7 +9,9 @@ from pytesseract import pytesseract
 from time import sleep
 from pynput import keyboard
 import os
-from utils.logger import logger
+
+# Initialize logger based on window title before anything else
+configure_logger(shared_state.WINDOW_TITLE)
 
 # Set up tesseract
 pytesseract.tesseract_cmd = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"

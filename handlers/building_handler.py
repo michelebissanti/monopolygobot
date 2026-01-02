@@ -10,8 +10,7 @@ It is responsible for:
 """
 
 from shared_state import shared_state
-from pyautogui import moveTo
-from pydirectinput import click
+from utils.input_handler import global_input
 from time import sleep
 import re
 from utils.ocr_utils import OCRUtils
@@ -271,11 +270,11 @@ class BuildingHandler:
                 location = ocr_utils.find(build_image, label_name="Build Icon")
                 if location:
                     logger.debug(f"[BUILDER] Found build menu icon at {location}. Clicking...")
+                    logger.debug(f"[BUILDER] Found build menu icon at {location}. Clicking...")
                     x, y = location
-                    with shared_state.moveTo_lock:
-                        moveTo(x, y)
-                        sleep(0.2)
-                        click()
+                    global_input.safe_move_to(x, y)
+                    sleep(0.2)
+                    global_input.safe_pydirectinput_click()
                     sleep(2)
                     in_menu = self.check_menu_status()
                     print(in_menu)
@@ -464,10 +463,9 @@ class BuildingHandler:
                 location = ocr_utils.find(build_exit_image, label_name="Build Exit Icon")
                 logger.debug("[BUILDER] Exiting build menu...")
                 if location:
-                    with shared_state.moveTo_lock:
-                        moveTo(location)
-                        sleep(0.5)
-                        click()
+                    global_input.safe_move_to(location[0], location[1])
+                    sleep(0.5)
+                    global_input.safe_pydirectinput_click()
                     sleep(2)
                 if not location:
                     logger.debug("[BUILDER] Exited build menu successfully...")
@@ -585,9 +583,9 @@ class BuildingHandler:
                         affordable_structure_found = True 
                     
                     if should_click:
-                        with shared_state.moveTo_lock:
-                            moveTo(self.x, self.y)
-                            click()
+                        # Use global input lock for safe click
+                        global_input.safe_move_to(self.x, self.y)
+                        global_input.safe_pydirectinput_click()
                         actions_taken_in_this_cycle += 1
                         sleep(1.5) # Wait for animation/potential popup
                         

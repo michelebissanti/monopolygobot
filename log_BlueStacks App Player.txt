@@ -1,0 +1,222 @@
+2026-01-02 17:33:23,715:INFO:MonopolyGoBot - Logging initialized to log_BlueStacks App Player.txt
+2026-01-02 17:33:23,715:DEBUG:MonopolyGoBot - Autoroller handler initialized
+2026-01-02 17:33:23,717:DEBUG:MonopolyGoBot - [CACHE] Loaded cache from image_cache.pkl.
+2026-01-02 17:33:23,717:DEBUG:MonopolyGoBot - Cache initialized.
+2026-01-02 17:33:23,718:INFO:MonopolyGoBot - Starting...
+2026-01-02 17:33:23,722:DEBUG:MonopolyGoBot - [PLAYER-INFO] ========================================
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [STATE] PlayerInfo thread started successfully
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [PLAYER-INFO] PlayerInfo STARTING all threads...
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [PLAYER-INFO] ========================================
+2026-01-02 17:33:23,723:INFO:MonopolyGoBot - Waiting for PlayerInfo threads to initialize...
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [PLAYER-INFO] Started thread: money
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [PLAYER-INFO] Started thread: rolls
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [PLAYER-INFO] Started thread: multiplier
+2026-01-02 17:33:23,723:DEBUG:MonopolyGoBot - [PLAYER-INFO] Started thread: rolling_status
+2026-01-02 17:33:23,724:DEBUG:MonopolyGoBot - [PLAYER-INFO] In-Home thread started. Window coords: (-1877, 39, -1343, 1019)
+2026-01-02 17:33:23,724:DEBUG:MonopolyGoBot - [PLAYER-INFO] Started thread: in_home_status
+2026-01-02 17:33:23,724:DEBUG:MonopolyGoBot - [PLAYER-INFO] In-Home icon loaded. GO icon loaded.
+2026-01-02 17:33:23,724:DEBUG:MonopolyGoBot - [PLAYER-INFO] All threads started successfully
+2026-01-02 17:33:23,817:DEBUG:MonopolyGoBot - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 17:33:23,817:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 17:33:25,067:DEBUG:MonopolyGoBot - [PLAYER-INFO] Rolls updated: 0/50
+2026-01-02 17:33:28,724:INFO:MonopolyGoBot - PlayerInfo initialization complete
+2026-01-02 17:33:37,401:DEBUG:MonopolyGoBot - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 17:33:37,413:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 17:33:38,485:DEBUG:MonopolyGoBot - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 17:33:38,485:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 17:33:40,399:INFO:MonopolyGoBot - [STATUS] Starting all handlers...
+2026-01-02 17:33:40,399:DEBUG:MonopolyGoBot - [STATUS] Set in_home_status to True (assumed in home)
+2026-01-02 17:33:40,600:DEBUG:MonopolyGoBot - [autoroll_handler] autoroll_handler started. Notifying...
+2026-01-02 17:33:40,601:DEBUG:MonopolyGoBot - [STATE] Notifying autoroll handler thread...
+2026-01-02 17:33:40,801:DEBUG:MonopolyGoBot - [autoroll_handler] autoroll_handler notified.
+2026-01-02 17:33:41,002:DEBUG:MonopolyGoBot - [STATE] Autoroll handler thread notified.
+2026-01-02 17:33:41,002:DEBUG:MonopolyGoBot - [building_monitor] building_monitor started. Notifying...
+2026-01-02 17:33:41,002:DEBUG:MonopolyGoBot - [STATE] Notifying building monitor thread...
+2026-01-02 17:33:41,202:DEBUG:MonopolyGoBot - [building_monitor] building_monitor notified.
+2026-01-02 17:33:41,402:DEBUG:MonopolyGoBot - [STATE] Building monitor thread notified.
+2026-01-02 17:33:41,402:DEBUG:MonopolyGoBot - [bank_heist] bank_heist started. Notifying...
+2026-01-02 17:33:41,603:DEBUG:MonopolyGoBot - [bank_heist] bank_heist notified.
+2026-01-02 17:33:41,804:DEBUG:MonopolyGoBot - [shut_down] shut_down started. Notifying...
+2026-01-02 17:33:42,004:DEBUG:MonopolyGoBot - [shut_down] shut_down notified.
+2026-01-02 17:33:42,205:DEBUG:MonopolyGoBot - [ui] ui started. Notifying...
+2026-01-02 17:33:42,406:DEBUG:MonopolyGoBot - [ui] ui notified.
+2026-01-02 17:33:42,606:DEBUG:MonopolyGoBot - [multiplier_monitor] multiplier_monitor started. Notifying...
+2026-01-02 17:33:42,606:DEBUG:MonopolyGoBot - [STATE] Notifying multiplier monitor thread...
+2026-01-02 17:33:42,807:DEBUG:MonopolyGoBot - [multiplier_monitor] multiplier_monitor notified.
+2026-01-02 17:33:43,007:DEBUG:MonopolyGoBot - [STATE] Multiplier monitor thread notified.
+2026-01-02 17:33:43,007:DEBUG:MonopolyGoBot - [autoroll_monitor] autoroll_monitor started. Notifying...
+2026-01-02 17:33:43,007:DEBUG:MonopolyGoBot - [STATE] Notifying autoroll monitor thread...
+2026-01-02 17:33:43,208:DEBUG:MonopolyGoBot - [autoroll_monitor] autoroll_monitor notified.
+2026-01-02 17:33:43,408:DEBUG:MonopolyGoBot - [STATE] Autoroll monitor thread notified.
+2026-01-02 17:33:43,408:DEBUG:MonopolyGoBot - [idle] idle started. Notifying...
+2026-01-02 17:33:43,609:DEBUG:MonopolyGoBot - [idle] idle notified.
+2026-01-02 17:33:43,809:DEBUG:MonopolyGoBot - [DESTRUCTION] Starting destruction handler...
+2026-01-02 17:33:43,809:DEBUG:MonopolyGoBot - [destruction] destruction started. Notifying...
+2026-01-02 17:33:43,809:DEBUG:MonopolyGoBot - [DESTRUCTION] Destruction handler is now active!
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [AR-H] Received notification! Starting...
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [BUILD-M] ========================================
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [SD] Received notification! Starting...
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [HEIST] Received notification! Starting...
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [UI] Received notification! Starting...
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [MP-M] Received notification! Starting...
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [IDLE] Received notification! Starting...
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [AR-M] Received notification! Starting...
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - autoroller_running and disable_autoroller_running are False
+2026-01-02 17:33:43,810:DEBUG:MonopolyGoBot - [BUILD-M] Building Monitor STARTED
+2026-01-02 17:33:43,812:DEBUG:MonopolyGoBot - Updated autoroller_running to False. Notifying...
+2026-01-02 17:33:43,812:DEBUG:MonopolyGoBot - [BUILD-M] ========================================
+2026-01-02 17:33:43,813:DEBUG:MonopolyGoBot - Updated disable_autoroller_running to False. Notifying...
+2026-01-02 17:33:43,813:DEBUG:MonopolyGoBot - [BUILD-M] Minimum money required to build: 1000
+2026-01-02 17:33:43,813:DEBUG:MonopolyGoBot - [BUILD-M] Initial state: rolls=0, money=2304117, in_home=True
+2026-01-02 17:33:44,011:DEBUG:MonopolyGoBot - [destruction] destruction notified.
+2026-01-02 17:33:44,358:DEBUG:MonopolyGoBot - [BUILD-M] Check #1: CONDIZIONI SODDISFATTE! rolls=0, money=2304117
+2026-01-02 17:33:44,358:DEBUG:MonopolyGoBot - [BUILD-M] No more rolls available (rolls=0) and enough money (2304117). Starting builder...
+2026-01-02 17:33:44,969:DEBUG:MonopolyGoBot - [BUILDER] Loaded data from BlueStacks App Player_game_data.json.
+2026-01-02 17:33:44,969:DEBUG:MonopolyGoBot - [BUILDER] Initialized successfully.
+2026-01-02 17:33:44,969:DEBUG:MonopolyGoBot - [BUILD-M] Builder handler thread started in BuildingMonitor
+2026-01-02 17:33:45,687:DEBUG:MonopolyGoBot - [CACHE] Caching C:\Users\genie\Documents\GitHub\monopolygobot\images\ui\dialogue.png...
+2026-01-02 17:33:45,947:DEBUG:MonopolyGoBot - [MP-M] Builder running. Waiting for builder to finish before starting multiplier handler...
+2026-01-02 17:33:46,207:DEBUG:MonopolyGoBot - [BUILDER] Not in menu, looking for build icon
+2026-01-02 17:33:46,342:DEBUG:MonopolyGoBot - [BUILDER] Found build menu icon at (-1758, 941). Clicking...
+2026-01-02 17:33:46,342:DEBUG:MonopolyGoBot - [BUILDER] Found build menu icon at (-1758, 941). Clicking...
+2026-01-02 17:33:46,501:DEBUG:MonopolyGoBot - [CACHE] Caching C:\Users\genie\Documents\GitHub\monopolygobot\images\ui\click_tutorial.png...
+2026-01-02 17:33:48,116:DEBUG:MonopolyGoBot - [PLAYER-INFO] Home/GO lost. Setting in_home_status = False
+2026-01-02 17:33:48,543:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money thread waiting for in_home_status...
+2026-01-02 17:33:49,007:DEBUG:MonopolyGoBot - [BUILDER] Board name is PROSPERITYDRIVE.
+2026-01-02 17:33:49,267:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:33:49,267:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:33:49,267:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building1. Blind clicking...
+2026-01-02 17:33:49,559:DEBUG:MonopolyGoBot - [AR-M] Waiting for builder to finish...
+2026-01-02 17:33:49,908:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:50,949:DEBUG:MonopolyGoBot - [MP-M] Waiting for builder to finish...
+2026-01-02 17:33:51,020:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:51,692:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:33:51,693:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:33:51,693:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building2. Blind clicking...
+2026-01-02 17:33:52,117:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:53,215:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:54,130:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:33:54,130:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:33:54,130:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building3. Blind clicking...
+2026-01-02 17:33:54,317:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:55,413:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:56,522:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:56,848:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: '2.73M
+'
+2026-01-02 17:33:56,848:DEBUG:MonopolyGoBot - [BUILD-H] Converted '2.73M
+' -> 2,730,000
+2026-01-02 17:33:56,848:DEBUG:MonopolyGoBot - [BUILDER] Cost 2730000 > Money 2304117. Skipping building4.
+2026-01-02 17:33:57,165:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: '4.21M
+'
+2026-01-02 17:33:57,165:DEBUG:MonopolyGoBot - [BUILD-H] Converted '4.21M
+' -> 4,210,000
+2026-01-02 17:33:57,165:DEBUG:MonopolyGoBot - [BUILDER] Cost 4210000 > Money 2304117. Skipping building5.
+2026-01-02 17:33:57,625:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:58,375:DEBUG:MonopolyGoBot - [BUILDER] Board name is PROSPERITYDRIVE.
+2026-01-02 17:33:58,584:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:33:58,584:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:33:58,584:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building1. Blind clicking...
+2026-01-02 17:33:58,754:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:33:59,560:DEBUG:MonopolyGoBot - [AR-M] Waiting for builder to finish...
+2026-01-02 17:33:59,866:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:00,949:DEBUG:MonopolyGoBot - [MP-M] Waiting for builder to finish...
+2026-01-02 17:34:00,999:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:01,108:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:34:01,108:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:34:01,108:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building2. Blind clicking...
+2026-01-02 17:34:02,115:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:03,218:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:03,526:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:34:03,526:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:34:03,526:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building3. Blind clicking...
+2026-01-02 17:34:04,327:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:05,442:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:05,965:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: '2.73M
+'
+2026-01-02 17:34:05,965:DEBUG:MonopolyGoBot - [BUILD-H] Converted '2.73M
+' -> 2,730,000
+2026-01-02 17:34:05,965:DEBUG:MonopolyGoBot - [BUILDER] Cost 2730000 > Money 2304117. Skipping building4.
+2026-01-02 17:34:06,356:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: '4.21M
+'
+2026-01-02 17:34:06,356:DEBUG:MonopolyGoBot - [BUILD-H] Converted '4.21M
+' -> 4,210,000
+2026-01-02 17:34:06,356:DEBUG:MonopolyGoBot - [BUILDER] Cost 4210000 > Money 2304117. Skipping building5.
+2026-01-02 17:34:06,563:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:07,595:DEBUG:MonopolyGoBot - [BUILDER] Board name is PROSPERITYDRIVE.
+2026-01-02 17:34:07,692:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:07,826:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:34:07,826:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:34:07,826:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building1. Blind clicking...
+2026-01-02 17:34:08,797:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:09,560:DEBUG:MonopolyGoBot - [AR-M] Waiting for builder to finish...
+2026-01-02 17:34:09,900:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:10,215:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:34:10,215:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:34:10,215:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building2. Blind clicking...
+2026-01-02 17:34:10,950:DEBUG:MonopolyGoBot - [MP-M] Waiting for builder to finish...
+2026-01-02 17:34:11,028:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:12,122:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:12,638:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: ''
+2026-01-02 17:34:12,639:DEBUG:MonopolyGoBot - [BUILD-H] Failed to parse cost from '', returning 0
+2026-01-02 17:34:12,639:DEBUG:MonopolyGoBot - [BUILDER] Cost unknown for building3. Blind clicking...
+2026-01-02 17:34:13,231:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:14,328:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:15,070:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: '2.73M
+'
+2026-01-02 17:34:15,070:DEBUG:MonopolyGoBot - [BUILD-H] Converted '2.73M
+' -> 2,730,000
+2026-01-02 17:34:15,070:DEBUG:MonopolyGoBot - [BUILDER] Cost 2730000 > Money 2304117. Skipping building4.
+2026-01-02 17:34:15,350:DEBUG:MonopolyGoBot - [BUILD-H] Extracting cost from OCR text: '4.21M
+'
+2026-01-02 17:34:15,350:DEBUG:MonopolyGoBot - [BUILD-H] Converted '4.21M
+' -> 4,210,000
+2026-01-02 17:34:15,350:DEBUG:MonopolyGoBot - [BUILDER] Cost 4210000 > Money 2304117. Skipping building5.
+2026-01-02 17:34:15,414:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:15,452:DEBUG:MonopolyGoBot - [BUILDER] Max cycles reached (3). Exiting to prevent infinite loop.
+2026-01-02 17:34:15,452:DEBUG:MonopolyGoBot - [BUILDER] Exiting building handler...
+2026-01-02 17:34:15,452:DEBUG:MonopolyGoBot - [BUILDER] Saving data to BlueStacks App Player_game_data.json...
+2026-01-02 17:34:15,746:DEBUG:MonopolyGoBot - [BUILDER] Exiting build menu...
+2026-01-02 17:34:16,532:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: ''
+2026-01-02 17:34:17,643:DEBUG:MonopolyGoBot - [HEIST] Active Check OCR: 'i we Nite he as
+a
+'
+2026-01-02 17:34:18,077:DEBUG:MonopolyGoBot - [PLAYER-INFO] Home/GO detected. Setting in_home_status = True
+2026-01-02 17:34:18,077:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money thread: in_home_status became True!
+2026-01-02 17:34:18,453:DEBUG:MonopolyGoBot - [BUILD-M] Builder handler finished
+2026-01-02 17:34:18,654:DEBUG:MonopolyGoBot - [BUILD-M] Build cycle completed. Entering Wait Mode until rolls increase...
+2026-01-02 17:34:19,286:DEBUG:MonopolyGoBot - [BUILD-M] Raw Wait Time OCR: '736:02
+'
+2026-01-02 17:34:19,286:DEBUG:MonopolyGoBot - [BUILD-M] Waiting for rolls... (36:02)
+2026-01-02 17:34:23,309:DEBUG:MonopolyGoBot - [CACHE] Caching C:\Users\genie\Documents\GitHub\monopolygobot\images\ui\build-exit.png...
+2026-01-02 17:34:33,532:DEBUG:MonopolyGoBot - [CACHE] Caching C:\Users\genie\Documents\GitHub\monopolygobot\images\ui\friends_exit.png...
+2026-01-02 17:34:33,780:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:35:10,094:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:35:19,574:DEBUG:MonopolyGoBot - [BUILD-M] Raw Wait Time OCR: '735:00
+'
+2026-01-02 17:35:19,575:DEBUG:MonopolyGoBot - [BUILD-M] Waiting for rolls... (35:00)
+2026-01-02 17:35:46,615:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:36:19,880:DEBUG:MonopolyGoBot - [BUILD-M] Raw Wait Time OCR: '734:00
+'
+2026-01-02 17:36:19,880:DEBUG:MonopolyGoBot - [BUILD-M] Waiting for rolls... (34:00)
+2026-01-02 17:36:23,418:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:36:59,952:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:37:20,505:DEBUG:MonopolyGoBot - [BUILD-M] Raw Wait Time OCR: '732:59
+'
+2026-01-02 17:37:20,505:DEBUG:MonopolyGoBot - [BUILD-M] Waiting for rolls... (32:59)
+2026-01-02 17:37:36,340:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:38:12,840:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:38:20,652:DEBUG:MonopolyGoBot - [BUILD-M] Raw Wait Time OCR: '731:59
+'
+2026-01-02 17:38:20,652:DEBUG:MonopolyGoBot - [BUILD-M] Waiting for rolls... (31:59)
+2026-01-02 17:38:49,291:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:39:21,242:DEBUG:MonopolyGoBot - [BUILD-M] Raw Wait Time OCR: '730:59
+'
+2026-01-02 17:39:21,243:DEBUG:MonopolyGoBot - [BUILD-M] Waiting for rolls... (30:59)
+2026-01-02 17:39:26,562:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:40:03,440:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:40:21,846:DEBUG:MonopolyGoBot - [BUILD-M] Raw Wait Time OCR: '729:58
+'
+2026-01-02 17:40:21,846:DEBUG:MonopolyGoBot - [BUILD-M] Waiting for rolls... (29:58)
+2026-01-02 17:40:40,148:DEBUG:MonopolyGoBot - [PLAYER-INFO] Money updated: 2,304,117
+2026-01-02 17:41:03,416:INFO:MonopolyGoBot - [STATUS] Quick Exit triggered!
